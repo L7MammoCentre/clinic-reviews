@@ -28,6 +28,10 @@ textarea{
   font-size:16px;
   resize:none;
 }
+p.instruction{
+  font-size:14px;
+  color:#333;
+}
 </style>
 
 </head>
@@ -45,6 +49,7 @@ textarea{
 <button id="copyBtn">Скопировать текст</button>
 
 <h3>Оставить отзыв:</h3>
+<p class="instruction">Нажмите кнопку, чтобы перейти к нашей карте. На открывшейся странице выберите "Написать отзыв".</p>
 <button id="googleBtn">Google</button>
 <button id="gisBtn">2GIS</button>
 
@@ -74,10 +79,10 @@ document.getElementById("copyBtn").onclick = function(){
 };
 
 // Ссылки на отзывы
-// Google: короткая ссылка с Place ID (надёжно работает на всех устройствах)
-const googleLink = "https://search.google.com/local/writereview?placeid=ChIJ0cJ3H6CkQzgR1FprOjSCx5s";
+// Google: карта клиники с выделением
+const googleLink = "https://www.google.com/maps/search/?api=1&query_place_id=ChIJ0cJ3H6CkQzgR1FprOjSCx5s";
 
-// 2GIS: ведёт на карточку клиники, пользователь нажимает "Написать отзыв"
+// 2GIS: карточка клиники
 const gisLink = "https://2gis.ru/makhachkala/firm/70000001036966726";
 
 // Кнопки открытия ссылок
