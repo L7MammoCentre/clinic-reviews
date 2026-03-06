@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Оставить отзыв</title>
+
+<style>
+body{
+font-family:Arial;
+text-align:center;
+padding:40px;
+background:#f5f5f5;
+}
+button{
+padding:15px 25px;
+margin:10px;
+font-size:16px;
+border:none;
+border-radius:8px;
+background:#4CAF50;
+color:white;
+}
+textarea{
+width:90%;
+height:120px;
+margin-top:20px;
+font-size:16px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h2>Спасибо за визит ❤️</h2>
+<p>Нам будет очень приятно, если вы оставите отзыв</p>
+
+<button onclick="generateReview()">Сгенерировать текст</button>
+
+<br>
+<textarea id="reviewText"></textarea>
+<br>
+<button onclick="copyText()">Скопировать текст</button>
+
+<h3>Оставить отзыв:</h3>
+<button onclick="google()">Google</button>
+<button onclick="gis()">2GIS</button>
+<button onclick="prodoc()">ПроДокторов</button>
+
+<script>
+const reviews = [
+"Очень внимательный врач, подробно объяснил лечение. В клинике чисто и приятная атмосфера. Спасибо за профессионализм.",
+"Был на приеме в этой клинике. Всё прошло комфортно, врач подробно ответил на все вопросы. Рекомендую.",
+"Отличная клиника и очень вежливый персонал. Прием прошел спокойно, врач всё объяснил и дал рекомендации.",
+"Хорошее обслуживание, внимательный врач и приятная атмосфера. Остался доволен приемом.",
+"Спасибо врачу за внимательное отношение и профессиональный подход. Всё прошло отлично."
+];
+
+function generateReview(){
+let random = reviews[Math.floor(Math.random()*reviews.length)];
+document.getElementById("reviewText").value = random;
+}
+
+function copyText(){
+let text = document.getElementById("reviewText");
+text.select();
+document.execCommand("copy");
+alert("Текст скопирован");
+}
+
+function google(){
+window.open(https://search.google.com/local/writereview?placeid=XXXXX");
+}
+
+function gis(){
+window.open(https://2gis.ru/your_city/firm/00000000000000000/tab/reviews?writeReview);
+}
+
+function prodoc(){
+window.open(https://prodoctorov.ru/clinic/CLINIC_ID/otzivi/);
+}
+</script>
+
+</body>
+</html>
