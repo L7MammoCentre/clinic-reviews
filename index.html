@@ -47,7 +47,6 @@ textarea{
 <h3>Оставить отзыв:</h3>
 <button id="googleBtn">Google</button>
 <button id="gisBtn">2GIS</button>
-<button id="prodocBtn">ПроДокторов</button>
 
 <script>
 // Массив примеров отзывов
@@ -74,10 +73,9 @@ document.getElementById("copyBtn").onclick = function(){
   alert("Текст скопирован!");
 };
 
-// Ссылки на отзывы — замените на свои реальные
-const googleLink = "https://search.google.com/local/writereview?placeid=ChIJexample1234";
-const gisLink = "https://2gis.ru/yourcity/firm/70000000000000000/tab/reviews?writeReview";
-const prodocLink = "https://prodoctorov.ru/clinic/12345/otzivi/";
+// Ссылки на отзывы
+const googleLink = "https://www.google.com/maps/place/Маммологический+центр+%22L7%22,+ул.+Абубакарова,+74,+Махачкала,+Респ.+Дагестан,+367000/@42.9727081,47.4946757,17z/data=!4m6!3m5!1s0x404ea02e68c1fa6b:0xa34833769d433377!8m2!3d42.9727081!4d47.4946757!16s%2Fg%2F11c55ts7gv?g_ep=Eg1tbF8yMDI2MDMwMl8wIJvbDyoASAJQAg%3D%3D";
+const gisLink = "https://2gis.ru/makhachkala/firm/70000001036966726/tab/reviews/addreview?m=47.494734%2C42.972773%2F16";
 
 // Кнопки открытия ссылок
 document.getElementById("googleBtn").onclick = function(){
@@ -85,9 +83,6 @@ document.getElementById("googleBtn").onclick = function(){
 };
 document.getElementById("gisBtn").onclick = function(){
   window.open(gisLink, "_blank");
-};
-document.getElementById("prodocBtn").onclick = function(){
-  window.open(prodocLink, "_blank");
 };
 </script>
 
