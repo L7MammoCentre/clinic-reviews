@@ -2,96 +2,119 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Оставить отзыв</title>
-
+<title>Отзывы L7</title>
 <style>
 body{
   font-family:Arial;
   text-align:center;
   padding:40px;
-  background:#f5f5f5;
+  background:#f4f4f4;
 }
+
 button{
-  padding:15px 25px;
-  margin:10px;
+  padding:14px 22px;
+  margin:8px;
   font-size:16px;
   border:none;
   border-radius:8px;
-  background:#4CAF50;
+  background:#2e7d32;
   color:white;
   cursor:pointer;
 }
+
 textarea{
   width:90%;
-  height:120px;
-  margin-top:20px;
+  height:140px;
+  margin-top:15px;
   font-size:16px;
-  resize:none;
 }
-p.instruction{
-  font-size:14px;
-  color:#333;
+
+#qr{
+  margin-top:30px;
+}
+
+img{
+  width:250px;
+  margin-top:15px;
 }
 </style>
-
 </head>
-
 <body>
 
-<h2>Спасибо за визит ❤️</h2>
-<p>Нам будет очень приятно, если вы оставите отзыв</p>
+<h2>Оставьте отзыв о центре L7 ❤️</h2>
+<p>Нажмите кнопку чтобы сгенерировать текст</p>
 
-<button id="genBtn">Сгенерировать текст</button>
-
+<button onclick="generate()">Сгенерировать текст</button>
 <br>
-<textarea id="reviewText" placeholder="Ваш отзыв появится здесь..."></textarea>
+<textarea id="review"></textarea>
 <br>
-<button id="copyBtn">Скопировать текст</button>
+<button onclick="copyText()">Скопировать текст</button>
 
-<h3>Оставить отзыв:</h3>
-<p class="instruction">Нажмите кнопку, чтобы перейти к нашей карте. На открывшейся странице выберите "Написать отзыв".</p>
-<button id="googleBtn">Google</button>
-<button id="gisBtn">2GIS</button>
+<h3>Выберите площадку</h3>
+<button onclick="showGoogle()">Google</button>
+<button onclick="show2gis()">2GIS</button>
+<button onclick="showDoctors()">ПроДокторов</button>
+
+<div id="qr"></div>
 
 <script>
-// Массив примеров отзывов
+// Список шаблонов отзывов
 const reviews = [
-  "Очень внимательный врач, подробно объяснил лечение. В клинике чисто и приятная атмосфера. Спасибо за профессионализм.",
-  "Был на приеме в этой клинике. Всё прошло комфортно, врач подробно ответил на все вопросы. Рекомендую.",
-  "Отличная клиника и очень вежливый персонал. Прием прошел спокойно, врач всё объяснил и дал рекомендации.",
-  "Хорошее обслуживание, внимательный врач и приятная атмосфера. Остался доволен приемом.",
-  "Спасибо врачу за внимательное отношение и профессиональный подход. Всё прошло отлично."
+  "Очень внимательный врач, всё подробно объяснил. В клинике чисто и приятная атмосфера.",
+  "Спасибо врачу за профессионализм и внимательное отношение.",
+  "Отличная клиника и вежливый персонал. Прием прошел комфортно.",
+  "Врач подробно ответил на все вопросы и дал рекомендации.",
+  "Очень хорошее отношение к пациентам. Осталась довольна приемом."
 ];
 
 // Генерация текста
-document.getElementById("genBtn").onclick = function(){
-  const random = reviews[Math.floor(Math.random()*reviews.length)];
-  document.getElementById("reviewText").value = random;
-};
+function generate(){
+  let r = reviews[Math.floor(Math.random()*reviews.length)];
+  document.getElementById("review").value = r;
+}
 
 // Копирование текста
-document.getElementById("copyBtn").onclick = function(){
-  const textArea = document.getElementById("reviewText");
-  textArea.select();
-  textArea.setSelectionRange(0, 99999);
+function copyText(){
+  let text = document.getElementById("review");
+  text.select();
   document.execCommand("copy");
-  alert("Текст скопирован!");
-};
+  alert("Текст скопирован");
+}
 
-// Ссылки на отзывы
-// Google: карта клиники с выделением
-const googleLink = "https://www.google.com/maps/search/?api=1&query_place_id=ChIJ0cJ3H6CkQzgR1FprOjSCx5s";
+// QR-коды филиалов Google
+function showGoogle(){
+  document.getElementById("qr").innerHTML = `
+    <h3>Выберите филиал</h3>
+    <p>Абубакарова</p>
+    <img src="google-abubakarova.png" alt="QR Google Абубакарова">
+    <p>Батырая</p>
+    <img src="google-batyraya.png" alt="QR Google Батырая">
+  `;
+}
 
-// 2GIS: карточка клиники
-const gisLink = "https://2gis.ru/makhachkala/firm/70000001036966726";
+// QR-коды филиалов 2GIS
+function show2gis(){
+  document.getElementById("qr").innerHTML = `
+    <h3>Выберите филиал</h3>
+    <p>Абубакарова</p>
+    <img src="gis-abubakarova.png" alt="QR 2GIS Абубакарова">
+    <p>Батырая</p>
+    <img src="gis-batyraya.png" alt="QR 2GIS Батырая">
+  `;
+}
 
-// Кнопки открытия ссылок
-document.getElementById("googleBtn").onclick = function(){
-  window.open(googleLink, "_blank");
-};
-document.getElementById("gisBtn").onclick = function(){
-  window.open(gisLink, "_blank");
-};
+// QR-коды врачей ПроДокторов
+function showDoctors(){
+  document.getElementById("qr").innerHTML = `
+    <h3>Выберите врача</h3>
+    <p>Тамаева Фатима Арслановна</p>
+    <img src="tamaeva.png" alt="QR Тамаева">
+    <p>Нуриева Анастасия Мирединовна</p>
+    <img src="nurieva.png" alt="QR Нуриева">
+    <!-- Добавляйте сюда новые QR-коды врачей -->
+    <!-- <p>Имя Фамилия</p><img src="файл.png" alt="QR Имя"> -->
+  `;
+}
 </script>
 
 </body>
