@@ -1,64 +1,115 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="ru">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Отзывы L7</title>
 <style>
-body{
-  font-family:Arial;
-  text-align:center;
-  padding:40px;
-  background:#f4f4f4;
-}
-
-button{
-  padding:14px 22px;
-  margin:8px;
-  font-size:16px;
-  border:none;
-  border-radius:8px;
-  background:#2e7d32;
-  color:white;
-  cursor:pointer;
-}
-
-textarea{
-  width:90%;
-  height:140px;
-  margin-top:15px;
-  font-size:16px;
-}
-
-#qr{
-  margin-top:30px;
-}
-
-img{
-  width:250px;
-  margin-top:15px;
-}
+  :root{--accent:#2e7d32;--muted:#666;--bg:#f4f4f4;--card:#fff}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Arial, sans-serif;background:var(--bg);color:#111}
+  .wrap{max-width:940px;margin:30px auto;padding:18px}
+  header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  h1{margin:0;font-size:20px}
+  p.lead{color:var(--muted);margin:6px 0 16px}
+  .panel{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 6px 18px rgba(10,20,30,0.05)}
+  .controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  button{padding:10px 14px;border:0;border-radius:10px;background:var(--accent);color:#fff;cursor:pointer;font-size:14px}
+  button.secondary{background:#1976d2}
+  textarea{width:100%;min-height:120px;padding:12px;border-radius:10px;border:1px solid #e6eef7;resize:vertical;font-size:15px}
+  .platforms{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+  .platforms button{background:#555}
+  .qr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px}
+  .qr-card{background:#fafafa;padding:10px;border-radius:10px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
+  .qr-card img{max-width:180px;border-radius:8px;cursor:pointer}
+  .link-btn{padding:8px 10px;border-radius:8px;background:#1976d2;color:#fff;border:0;cursor:pointer;font-size:13px}
+  .link-btn.alt{background:#555}
+  .small{font-size:13px;color:var(--muted)}
+  #toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#333;color:#fff;padding:10px 14px;border-radius:8px;display:none;z-index:999}
+  footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
+  @media (max-width:520px){ .qr-card img{max-width:140px} header{flex-direction:column;align-items:flex-start} }
 </style>
 </head>
 <body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Оставьте отзыв о центре L7 ❤️</h1>
+        <p class="lead">Сгенерируйте отзыв, скопируйте и откройте нужную площадку / филиал через QR или ссылку.</p>
+      </div>
+      <div class="small">Готово для GitHub Pages</div>
+    </header>
 
-<h2>Оставьте отзыв о центре L7 ❤️</h2>
-<p>Нажмите кнопку чтобы сгенерировать текст</p>
+<section style="margin-top:12px" class="panel">
+  <div class="controls">
+    <button id="generateBtn">Сгенерировать текст</button>
+    <button id="copyBtn" class="secondary">Скопировать текст</button>
+  </div>
+  <textarea id="review" placeholder="Здесь появится сгенерированный отзыв..."></textarea>
+</section>
 
-<button onclick="generate()">Сгенерировать текст</button>
-<br>
-<textarea id="review"></textarea>
-<br>
-<button onclick="copyText()">Скопировать текст</button>
+<section style="margin-top:14px" class="panel">
+  <h3 style="margin:0 0 8px">Выберите площадку</h3>
+  <div class="platforms">
+    <button class="platform" data-platform="google">Google</button>
+    <button class="platform" data-platform="2gis">2GIS</button>
+    <button class="platform" data-platform="prodoctor">ПроДокторов</button>
+  </div>
 
-<h3>Выберите площадку</h3>
-<button onclick="showGoogle()">Google</button>
-<button onclick="show2gis()">2GIS</button>
-<button onclick="showDoctors()">ПроДокторов</button>
+  <div id="qrArea" class="qr-grid" style="margin-top:12px">
+    <div class="small">Выберите платформу выше, чтобы увидеть филиалы / врачей.</div>
+  </div>
+</section>
 
-<div id="qr"></div>
+<footer>© <span id="year"></span> Центр L7</footer>
+
+
+  </div>
+
+  <div id="toast" role="status" aria-live="polite"></div>
 
 <script>
-// Список шаблонов отзывов
+/* Данные: имена файлов QR и реальные ссылки (файлы положите рядом с index.html) */
+const data = {
+  google: [
+    {
+      name: "Абубакарова",
+      url: "https://www.google.com/maps/place/Маммологический+центр+%22L7%22,+ул.+Абубакарова,+74,+Махачкала,+Респ.+Дагестан,+367000/@42.9727081,47.4946757,16z/data=!4m6!3m5!1s0x404ea02e68c1fa6b:0xa34833769d433377!8m2!3d42.9727081!4d47.4946757!16s%2Fg%2F11c55ts7gv?utm_campaign=ml-sbr-16204573&g_ep=Eg1tbF8yMDI2MDMwOV8wIJvbDyoASAJQAg%3D%3D",
+      qr: "google-abubakarova.png"
+    },
+    {
+      name: "Батырая",
+      url: "https://www.google.com/maps/place/Маммологический+центр+L7,+ул.+Батырая,+88,+Махачкала,+Респ.+Дагестан,+367008/@42.9729789,47.5111132,17z/data=!4m6!3m5!1s0x404ea1f025adb429:0xb63ebc9238fb2f0f!8m2!3d42.9729789!4d47.5111132!16s%2Fg%2F11mthpwqnz?utm_campaign=ml-sbr-16204573&g_ep=Eg1tbF8yMDI2MDMwOV8wIJvbDyoASAJQAg%3D%3D",
+      qr: "google-batyraya.png"
+    }
+  ],
+  "2gis": [
+    {
+      name: "Абубакарова",
+      url: "https://2gis.ru/makhachkala/firm/70000001036966726/tab/reviews",
+      qr: "gis-abubakarova.png"
+    },
+    {
+      name: "Батырая",
+      url: "https://2gis.ru/makhachkala/firm/70000001063451186/tab/reviews",
+      qr: "gis-batyraya.png"
+    }
+  ],
+  prodoctor: [
+    {
+      name: "Тамаева Фатима Арслановна",
+      url: "https://prodoctorov.ru/mahachkala/vrach/455423-tamaeva/",
+      qr: "tamaeva.png"
+    },
+    {
+      name: "Нуриева Анастасия Мирединовна",
+      url: "https://prodoctorov.ru/mahachkala/vrach/465239-nurieva/",
+      qr: "nurieva.png"
+    }
+  ]
+};
+
+/* Шаблоны отзывов */
 const reviews = [
   "Очень внимательный врач, всё подробно объяснил. В клинике чисто и приятная атмосфера.",
   "Спасибо врачу за профессионализм и внимательное отношение.",
@@ -67,55 +118,69 @@ const reviews = [
   "Очень хорошее отношение к пациентам. Осталась довольна приемом."
 ];
 
-// Генерация текста
-function generate(){
-  let r = reviews[Math.floor(Math.random()*reviews.length)];
-  document.getElementById("review").value = r;
+/* Утилиты */
+function showToast(msg, ms = 2500){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=> t.style.display = 'none', ms);
 }
 
-// Копирование текста
-function copyText(){
-  let text = document.getElementById("review");
-  text.select();
-  document.execCommand("copy");
-  alert("Текст скопирован");
+/* Генерация и копирование */
+document.getElementById('generateBtn').addEventListener('click', ()=> {
+  const r = reviews[Math.floor(Math.random()*reviews.length)];
+  document.getElementById('review').value = r;
+});
+
+document.getElementById('copyBtn').addEventListener('click', async ()=> {
+  const text = document.getElementById('review').value || '';
+  if(!text.trim()){ showToast('Поле пустое — сначала сгенерируйте или вставьте текст'); return; }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    try{ await navigator.clipboard.writeText(text); showToast('Текст скопирован'); }
+    catch(e){ fallbackCopy(text); }
+  } else fallbackCopy(text);
+});
+
+function fallbackCopy(text){
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.left = '-9999px';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); showToast('Текст скопирован (fallback)'); }
+  catch(e){ showToast('Не удалось скопировать. Скопируйте вручную.'); }
+  document.body.removeChild(ta);
 }
 
-// QR-коды филиалов Google
-function showGoogle(){
-  document.getElementById("qr").innerHTML = `
-    <h3>Выберите филиал</h3>
-    <p>Абубакарова</p>
-    <img src="google-abubakarova.png" alt="QR Google Абубакарова">
-    <p>Батырая</p>
-    <img src="google-batyraya.png" alt="QR Google Батырая">
-  `;
+/* Показ QR и ссылок */
+const qrArea = document.getElementById('qrArea');
+document.querySelectorAll('.platform').forEach(btn => {
+  btn.addEventListener('click', ()=> renderPlatform(btn.dataset.platform));
+});
+
+function renderPlatform(platform){
+  const list = data[platform] || [];
+  qrArea.innerHTML = '';
+  if(!list.length){ qrArea.innerHTML = '<div class="small">Нет данных для выбранной платформы.</div>'; return; }
+  list.forEach(item => {
+    const card = document.createElement('div'); card.className = 'qr-card';
+    const title = document.createElement('div'); title.textContent = item.name; title.style.fontWeight='600'; title.style.fontSize='14px';
+    const img = document.createElement('img'); img.src = item.qr; img.alt = 'QR ' + item.name; img.loading='lazy';
+
+img.addEventListener('click', ()=> openLink(item.url));
+const small = document.createElement('div'); small.className='small'; small.textContent = item.url; small.style.wordBreak='break-all';
+const btns = document.createElement('div'); btns.style.display='flex'; btns.style.gap='8px'; btns.style.marginTop='6px';
+const openBtn = document.createElement('button'); openBtn.className='link-btn'; openBtn.textContent='Открыть'; openBtn.addEventListener('click', ()=> openLink(item.url));
+const copyBtn = document.createElement('button'); copyBtn.className='link-btn alt'; copyBtn.textContent='Копировать ссылку';
+copyBtn.addEventListener('click', async ()=> {
+  try{ await navigator.clipboard.writeText(item.url); showToast('Ссылка скопирована'); }
+  catch(e){ fallbackCopy(item.url); }
+});
+btns.appendChild(openBtn); btns.appendChild(copyBtn);
+card.appendChild(title); card.appendChild(img); card.appendChild(small); card.appendChild(btns);
+qrArea.appendChild(card);
+
+
+});
 }
 
-// QR-коды филиалов 2GIS
-function show2gis(){
-  document.getElementById("qr").innerHTML = `
-    <h3>Выберите филиал</h3>
-    <p>Абубакарова</p>
-    <img src="gis-abubakarova.png" alt="QR 2GIS Абубакарова">
-    <p>Батырая</p>
-    <img src="gis-batyraya.png" alt="QR 2GIS Батырая">
-  `;
-}
-
-// QR-коды врачей ПроДокторов
-function showDoctors(){
-  document.getElementById("qr").innerHTML = `
-    <h3>Выберите врача</h3>
-    <p>Тамаева Фатима Арслановна</p>
-    <img src="tamaeva.png" alt="QR Тамаева">
-    <p>Нуриева Анастасия Мирединовна</p>
-    <img src="nurieva.png" alt="QR Нуриева">
-    <!-- Добавляйте сюда новые QR-коды врачей -->
-    <!-- <p>Имя Фамилия</p><img src="файл.png" alt="QR Имя"> -->
-  `;
-}
-</script>
-
-</body>
-</html>
+function openLink(url){ if(!url) return showToast('Ссылка не задана'); window.open(url, '_blank',
