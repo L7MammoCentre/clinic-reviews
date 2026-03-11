@@ -18,10 +18,12 @@
   button.secondary{background:#1976d2}
   textarea{width:100%;min-height:120px;padding:12px;border-radius:10px;border:1px solid #e6eef7;resize:vertical;font-size:15px}
   .platforms{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
-  .platforms button{background:#555}
+  .platforms button{background:#555;color:#fff;cursor:pointer;border:0;border-radius:8px;padding:8px 12px;}
+  .platforms button.active{background:#2e7d32;}
   .qr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px}
   .qr-card{background:#fafafa;padding:10px;border-radius:10px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
-  .qr-card img{max-width:180px;border-radius:8px;cursor:pointer}
+  .qr-card img{max-width:180px;border-radius:8px;cursor:pointer;transition:transform .2s}
+  .qr-card img:hover{transform:scale(1.05)}
   .link-btn{padding:8px 10px;border-radius:8px;background:#1976d2;color:#fff;border:0;cursor:pointer;font-size:13px}
   .link-btn.alt{background:#555}
   .small{font-size:13px;color:var(--muted)}
@@ -31,14 +33,14 @@
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div>
-        <h1>Оставьте отзыв о центре L7 ❤️</h1>
-        <p class="lead">Сгенерируйте отзыв, скопируйте и откройте нужную площадку / филиал через QR или ссылку.</p>
-      </div>
-      <div class="small">Готово для GitHub Pages</div>
-    </header>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Оставьте отзыв о центре L7 ❤️</h1>
+      <p class="lead">Сгенерируйте отзыв, скопируйте и откройте нужную площадку / филиал через QR или ссылку.</p>
+    </div>
+    <div class="small">Готово для GitHub Pages</div>
+  </header>
 
 <section style="margin-top:12px" class="panel">
   <div class="controls">
@@ -62,54 +64,24 @@
 </section>
 
 <footer>© <span id="year"></span> Центр L7</footer>
+</div>
 
-
-  </div>
-
-  <div id="toast" role="status" aria-live="polite"></div>
+<div id="toast" role="status" aria-live="polite"></div>
 
 <script>
-/* Данные: имена файлов QR и реальные ссылки (файлы положите рядом с index.html) */
+/* Данные QR-кодов */
 const data = {
   google: [
-    {
-      name: "Абубакарова",
-      url: "https://www.google.com/maps/place/Маммологический+центр+%22L7%22,+ул.+Абубакарова,+74,+Махачкала,+Респ.+Дагестан,+367000/@42.9727081,47.4946757,16z/data=!4m6!3m5!1s0x404ea02e68c1fa6b:0xa34833769d433377!8m2!3d42.9727081!4d47.4946757!16s%2Fg%2F11c55ts7gv?utm_campaign=ml-sbr-16204573&g_ep=Eg1tbF8yMDI2MDMwOV8wIJvbDyoASAJQAg%3D%3D",
-      qr: "google-abubakarova.png"
-    },
-    {
-      name: "Батырая",
-      url: "https://www.google.com/maps/place/Маммологический+центр+L7,+ул.+Батырая,+88,+Махачкала,+Респ.+Дагестан,+367008/@42.9729789,47.5111132,17z/data=!4m6!3m5!1s0x404ea1f025adb429:0xb63ebc9238fb2f0f!8m2!3d42.9729789!4d47.5111132!16s%2Fg%2F11mthpwqnz?utm_campaign=ml-sbr-16204573&g_ep=Eg1tbF8yMDI2MDMwOV8wIJvbDyoASAJQAg%3D%3D",
-      qr: "google-batyraya.png"
-    }
-  ],google.push({
-  name: "Новый филиал",
-  url: "https://example.com",   // ссылка на филиал
-  qr: "google-newbranch.png"    // имя файла PNG
-});
+    { name: "Абубакарова", url: "https://www.google.com/maps/place/Маммологический+центр+%22L7%22,+ул.+Абубакарова,+74,+Махачкала,+Респ.+Дагестан,+367000/@42.9727081,47.4946757,16z/", qr: "google-abubakarova.png" },
+    { name: "Батырая", url: "https://www.google.com/maps/place/Маммологический+центр+L7,+ул.+Батырая,+88,+Махачкала,+Респ.+Дагестан,+367008/@42.9729789,47.5111132,17z/", qr: "google-batyraya.png" }
+  ],
   "2gis": [
-    {
-      name: "Абубакарова",
-      url: "https://2gis.ru/makhachkala/firm/70000001036966726/tab/reviews",
-      qr: "gis-abubakarova.png"
-    },
-    {
-      name: "Батырая",
-      url: "https://2gis.ru/makhachkala/firm/70000001063451186/tab/reviews",
-      qr: "gis-batyraya.png"
-    }
+    { name: "Абубакарова", url: "https://2gis.ru/makhachkala/firm/70000001036966726/tab/reviews", qr: "gis-abubakarova.png" },
+    { name: "Батырая", url: "https://2gis.ru/makhachkala/firm/70000001063451186/tab/reviews", qr: "gis-batyraya.png" }
   ],
   prodoctor: [
-    {
-      name: "Тамаева Фатима Арслановна",
-      url: "https://prodoctorov.ru/mahachkala/vrach/455423-tamaeva/",
-      qr: "tamaeva.png"
-    },
-    {
-      name: "Нуриева Анастасия Мирединовна",
-      url: "https://prodoctorov.ru/mahachkala/vrach/465239-nurieva/",
-      qr: "nurieva.png"
-    }
+    { name: "Тамаева Фатима Арслановна", url: "https://prodoctorov.ru/mahachkala/vrach/455423-tamaeva/", qr: "tamaeva.png" },
+    { name: "Нуриева Анастасия Мирединовна", url: "https://prodoctorov.ru/mahachkala/vrach/465239-nurieva/", qr: "nurieva.png" }
   ]
 };
 
@@ -122,7 +94,7 @@ const reviews = [
   "Очень хорошее отношение к пациентам. Осталась довольна приемом."
 ];
 
-/* Утилиты */
+/* Toast */
 function showToast(msg, ms = 2500){
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -158,7 +130,11 @@ function fallbackCopy(text){
 /* Показ QR и ссылок */
 const qrArea = document.getElementById('qrArea');
 document.querySelectorAll('.platform').forEach(btn => {
-  btn.addEventListener('click', ()=> renderPlatform(btn.dataset.platform));
+  btn.addEventListener('click', ()=> {
+    document.querySelectorAll('.platform').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderPlatform(btn.dataset.platform);
+  });
 });
 
 function renderPlatform(platform){
@@ -169,22 +145,25 @@ function renderPlatform(platform){
     const card = document.createElement('div'); card.className = 'qr-card';
     const title = document.createElement('div'); title.textContent = item.name; title.style.fontWeight='600'; title.style.fontSize='14px';
     const img = document.createElement('img'); img.src = item.qr; img.alt = 'QR ' + item.name; img.loading='lazy';
-
-img.addEventListener('click', ()=> openLink(item.url));
-const small = document.createElement('div'); small.className='small'; small.textContent = item.url; small.style.wordBreak='break-all';
-const btns = document.createElement('div'); btns.style.display='flex'; btns.style.gap='8px'; btns.style.marginTop='6px';
-const openBtn = document.createElement('button'); openBtn.className='link-btn'; openBtn.textContent='Открыть'; openBtn.addEventListener('click', ()=> openLink(item.url));
-const copyBtn = document.createElement('button'); copyBtn.className='link-btn alt'; copyBtn.textContent='Копировать ссылку';
-copyBtn.addEventListener('click', async ()=> {
-  try{ await navigator.clipboard.writeText(item.url); showToast('Ссылка скопирована'); }
-  catch(e){ fallbackCopy(item.url); }
-});
-btns.appendChild(openBtn); btns.appendChild(copyBtn);
-card.appendChild(title); card.appendChild(img); card.appendChild(small); card.appendChild(btns);
-qrArea.appendChild(card);
-
-
-});
+    img.addEventListener('click', ()=> openLink(item.url));
+    const small = document.createElement('div'); small.className='small'; small.textContent = item.url; small.style.wordBreak='break-all';
+    const btns = document.createElement('div'); btns.style.display='flex'; btns.style.gap='8px'; btns.style.marginTop='6px';
+    const openBtn = document.createElement('button'); openBtn.className='link-btn'; openBtn.textContent='Открыть'; openBtn.addEventListener('click', ()=> openLink(item.url));
+    const copyBtn = document.createElement('button'); copyBtn.className='link-btn alt'; copyBtn.textContent='Копировать ссылку';
+    copyBtn.addEventListener('click', async ()=> {
+      try{ await navigator.clipboard.writeText(item.url); showToast('Ссылка скопирована'); }
+      catch(e){ fallbackCopy(item.url); }
+    });
+    btns.appendChild(openBtn); btns.appendChild(copyBtn);
+    card.appendChild(title); card.appendChild(img); card.appendChild(small); card.appendChild(btns);
+    qrArea.appendChild(card);
+  });
 }
 
-function openLink(url){ if(!url) return showToast('Ссылка не задана'); window.open(url, '_blank',
+function openLink(url){ if(!url) return showToast('Ссылка не задана'); window.open(url, '_blank', 'noopener'); }
+
+/* init */
+document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
