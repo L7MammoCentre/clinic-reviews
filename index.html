@@ -56,19 +56,21 @@ textarea,select{width:100%;padding:12px;border-radius:12px;border:none;margin-to
 <div id="toast"></div>
 
 <script>
-// ---------- ОТЗЫВЫ -----------
+// ----------------- ГЕНЕРАЦИЯ 600+ уникальных отзывов -----------------
+const intro = ["Прием прошел комфортно","Визит прошел отлично","Очень довольна приемом","Все прошло спокойно","Обслуживание выше всяких похвал"];
+const doctor = ["врач был внимательный","доктор очень профессиональный","грамотный специалист","очень внимательный врач","врач с улыбкой"];
+const explanation = ["подробно объяснил все","ответил на все вопросы","все объяснил понятным языком","подробно рассказал о лечении","разъяснил каждый шаг"];
+const clinic = ["в клинике приятная атмосфера","коллектив очень доброжелательный","персонал вежливый","чувствуется поддержка","очень уютно и спокойно"];
+const ending = ["все прошло с улыбкой","остались только положительные эмоции","обязательно вернусь","рекомендую клинику","буду советовать друзьям"];
+
 const reviews = [];
-const p1=["Прием прошел комфортно","Визит прошел отлично","Очень довольна приемом","Все прошло спокойно"];
-const p2=["врач был внимательный","доктор очень профессиональный","грамотный специалист","очень внимательный врач"];
-const p3=["подробно объяснил все","ответил на все вопросы","все объяснил понятным языком","подробно рассказал о лечении"];
-const p4=["в клинике приятная атмосфера","коллектив очень доброжелательный","персонал вежливый","чувствуется поддержка"];
-const p5=["все прошло с улыбкой","остались только положительные эмоции","обязательно вернусь","рекомендую клинику"];
-for(let i=0;i<600;i++){
-  reviews.push(`${p1[i%4]}. ${p2[i%4]}, ${p3[i%4]}. ${p4[i%4]}. ${p5[i%4]}.`);
+while(reviews.length < 600){
+  const r = `${intro[Math.floor(Math.random()*intro.length)]}. ${doctor[Math.floor(Math.random()*doctor.length)]}, ${explanation[Math.floor(Math.random()*explanation.length)]}. ${clinic[Math.floor(Math.random()*clinic.length)]}. ${ending[Math.floor(Math.random()*ending.length)]}.`;
+  if(!reviews.includes(r)) reviews.push(r);
 }
 let lastIndex=-1;
 
-// ---------- ДАННЫЕ -----------
+// ----------------- ДАННЫЕ -----------------
 const data = {
 google:[
   {name:"Абубакарова", url:"https://www.google.com/maps/place/Маммологический+центр+%22L7%22,+ул.+Абубакарова,+74,+Махачкала,+Респ.+Дагестан,+367000/", qr:"qr/google-abubakarova.png"},
@@ -81,10 +83,10 @@ google:[
 prodoctor:[
 {name:"Абдуллаева Камилла Омаровна",url:"https://prodoctorov.ru/mahachkala/vrach/937672-abdullaeva/",qr:"qr/abdullaeva.png"},
 {name:"Азаматова Заида Арсланбековна",url:"https://prodoctorov.ru/mahachkala/vrach/955460-azamatova/",qr:"qr/azamatova.png"},
-{name:"Алиметова Карина Альбертовна",url:"https://prodoctorov.ru/mahachkala/vrach/138973-alimetova/",qr:"qr/alimetova.png"},
-{name:"Ахмедова Заира Магомедовна",url:"https://prodoctorov.ru/mahachkala/vrach/347307-ahmedova/",qr:"qr/ahmedova.png"},
-{name:"Бабаева Аминат Магомедовна",url:"https://prodoctorov.ru/mahachkала/vrach/1129493-babaeva/",qr:"qr/babaeva.png"},
-{name:"Гаджиева Мадина Халилбеговна",url:"https://prodoctorov.ru/mahachkала/vrach/536367-gadzhieva/",qr:"qr/gadzhieva.png"},
+{name:"Алиметова Карина Альбертовна",url:"https://prodoctorov.ru/mahachkала/vrach/138973-alimetova/",qr:"qr/alimetova.png"},
+{name:"Ахмедова Заира Магомедовна",url:"https://prodoctorov.ru/mahachкала/vrach/347307-ahmedova/",qr:"qr/ahmedova.png"},
+{name:"Бабаева Аминат Магомедовна",url:"https://prodoctorov.ru/mahachкала/vrach/1129493-babaeva/",qr:"qr/babaeva.png"},
+{name:"Гаджиева Мадина Халилбеговна",url:"https://prodoctorov.ru/mahachкала/vrach/536367-gadzhieva/",qr:"qr/gadzhieva.png"},
 {name:"Гамзатова Зайнаб Хизриевна",url:"https://prodoctorov.ru/mahachкала/vrach/1271257-gamzatova/",qr:"qr/gamzatova.png"},
 {name:"Гусейнаева Севиля Абакаровна",url:"https://prodoctorov.ru/mahachкала/vrach/1332886-gusyaynaeva/",qr:"qr/gusyaynaeva.png"},
 {name:"Даитгаджиева Аминат Магомедовна",url:"https://prodoctorov.ru/mahachкала/vrach/539425-daitgadzhieva/",qr:"qr/daitgadzhieva.png"},
@@ -121,7 +123,7 @@ prodoctor:[
 ]
 };
 
-// ---------- ЛОГИКА -----------
+// ----------------- ЛОГИКА -----------------
 let current=null;
 let currentPlatform=null;
 
