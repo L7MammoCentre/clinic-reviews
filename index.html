@@ -21,7 +21,8 @@ button{border:none;border-radius:12px;padding:10px;background:var(--accent);colo
 button.secondary{background:#e5e5ea;color:#000;}
 .platforms{display:flex;gap:8px;margin-bottom:10px;}
 .platforms button.active{background:#34c759;}
-textarea,select{width:100%;padding:12px;border-radius:12px;border:none;margin-top:10px;}
+textarea{width:100%;padding:12px;border-radius:12px;border:none;margin-top:10px;}
+select{width:100%;padding:12px;border-radius:12px;border:none;margin-top:10px;max-height:300px;overflow-y:auto;}
 .qr{text-align:center;margin-top:10px;}
 .qr img{max-width:160px;border-radius:12px;}
 .small{font-size:12px;color:var(--muted);word-break:break-all;}
@@ -68,31 +69,14 @@ textarea,select{width:100%;padding:12px;border-radius:12px;border:none;margin-to
 
 <script>
 const data = {
-
 google: [
-  {
-    name:"Абубакарова",
-    url:"https://www.google.com/maps/place/Маммологический+центр+%22L7%22,+ул.+Абубакарова,+74,+Махачкала,+Респ.+Дагестан,+367000/",
-    qr:"google-abubakarova.png"
-  },
-  {
-    name:"Батырая",
-    url:"https://www.google.com/maps/place/Маммологический+центр+L7,+ул.+Батырая,+88,+Махачкала,+Респ.+Дагестан,+367008/",
-    qr:"google-batyraya.png"
-  }
+  { name:"Абубакарова", url:"https://www.google.com/maps/place/Маммологический+центр+%22L7%22,+ул.+Абубакарова,+74,+Махачкала,+Респ.+Дагестан,+367000/", qr:"google-abubakarova.png" },
+  { name:"Батырая", url:"https://www.google.com/maps/place/Маммологический+центр+L7,+ул.+Батырая,+88,+Махачкала,+Респ.+Дагестан,+367008/", qr:"google-batyraya.png" }
 ],
 
 "2gis": [
-  {
-    name:"Абубакарова",
-    url:"https://2gis.ru/makhachkala/firm/70000001036966726/tab/reviews",
-    qr:"gis-abubakarova.png"
-  },
-  {
-    name:"Батырая",
-    url:"https://2gis.ru/makhachkala/firm/70000001063451186/tab/reviews",
-    qr:"gis-batyraya.png"
-  }
+  { name:"Абубакарова", url:"https://2gis.ru/makhachkala/firm/70000001036966726/tab/reviews", qr:"gis-abubakarova.png" },
+  { name:"Батырая", url:"https://2gis.ru/makhachkala/firm/70000001063451186/tab/reviews", qr:"gis-batyraya.png" }
 ],
 
 prodoctor: [
@@ -121,20 +105,20 @@ prodoctor: [
   { name:"Мурачуев Мирза Ажубович", url:"https://prodoctorov.ru/mahachkala/vrach/458593-murachuev/", qr:"murachuev.png" },
   { name:"Муслимова Батибат Магомедариповна", url:"https://prodoctorov.ru/mahachkala/vrach/906858-muslimova/", qr:"muslimova.png" },
   { name:"Нураева Тамара Шамильевна", url:"https://prodoctorov.ru/mahachkala/vrach/455422-nuraeva/", qr:"nuraeva.png" },
-  { name:"Нуриева Анастасия Мирединовна", url:"https://prodoctorov.ru/mahachkala/vrach/465239-nurieva/", qr:"nurieva.png" },
+  { name:"Нуриева Анастасия Мирединовна", url:"https://prodoctorov.ru/mahachкала/vrach/465239-nurieva/", qr:"nurieva.png" },
   { name:"Омарова Диана Гаджимурадовна", url:"https://prodoctorov.ru/mahachkala/vrach/455425-omarova/", qr:"omarova-d.png" },
-  { name:"Омарова Наиля Омаровна", url:"https://prodoctorov.ru/mahachkala/vrach/606299-omarova/", qr:"omarova-n.png" },
-  { name:"Омарова Оксана Магомедовна", url:"https://prodoctorov.ru/mahachkala/vrach/539403-omarova/", qr:"omarova-o.png" },
-  { name:"Рамазанова Заира Джамутдиновна", url:"https://prodoctorov.ru/mahachkala/vrach/555316-ramazanova/", qr:"ramazanova.png" },
-  { name:"Саидова Аминат Шамиловна", url:"https://prodoctorov.ru/mahachkala/vrach/900185-saidova/", qr:"saidova.png" },
-  { name:"Сулейманова Ирина Гасниевна", url:"https://prodoctorov.ru/mahachkala/vrach/273383-sulyaymanova/", qr:"suleymanova.png" },
-  { name:"Сурхаева Гидаят Камиловна", url:"https://prodoctorov.ru/mahachkala/vrach/1346571-surhaeva/", qr:"surhaeva.png" },
-  { name:"Тагирова Айша Гаджиевна", url:"https://prodoctorov.ru/mahachkala/vrach/455421-tagirova/", qr:"tagirova.png" },
-  { name:"Тамаева Фатима Арслановна", url:"https://prodoctorov.ru/mahachkala/vrach/455423-tamaeva/", qr:"tamaeva.png" },
-  { name:"Терещенко Каринэ Александровна", url:"https://prodoctorov.ru/mahachkala/vrach/539438-tereshenko/", qr:"tereshenko.png" },
-  { name:"Убайдуллаева Аида Абдулвагитовна", url:"https://prodoctorov.ru/mahachkala/vrach/1256140-ubaydullaeva/", qr:"ubaydullaeva.png" },
-  { name:"Шахсинова Раиса Наримановна", url:"https://prodoctorov.ru/mahachkala/vrach/1085216-shahsinova/", qr:"shahsinova.png" },
-  { name:"Шейхмагомедова Заира Адамовна", url:"https://prodoctorov.ru/mahachkala/vrach/455426-shyayhmagomedova/", qr:"sheikhmagomedova.png" }
+  { name:"Омарова Наиля Омаровна", url:"https://prodoctorov.ru/mahachкала/vrach/606299-omarova/", qr:"omarova-n.png" },
+  { name:"Омарова Оксана Магомедовна", url:"https://prodoctorov.ru/mahachкала/vrach/539403-omarova/", qr:"omarova-o.png" },
+  { name:"Рамазанова Заира Джамутдиновна", url:"https://prodoctorov.ru/mahachкала/vrach/555316-ramazanova/", qr:"ramazanova.png" },
+  { name:"Саидова Аминат Шамиловна", url:"https://prodoctorov.ru/mahachкала/vrach/900185-saidova/", qr:"saidova.png" },
+  { name:"Сулейманова Ирина Гасниевна", url:"https://prodoctorov.ru/mahachкала/vrach/273383-sulyaymanova/", qr:"suleymanova.png" },
+  { name:"Сурхаева Гидаят Камиловна", url:"https://prodoctorov.ru/mahachкала/vrach/1346571-surhaeva/", qr:"surhaeva.png" },
+  { name:"Тагирова Айша Гаджиевна", url:"https://prodoctorov.ru/mahachкала/vrach/455421-tagirova/", qr:"tagirova.png" },
+  { name:"Тамаева Фатима Арслановна", url:"https://prodoctorov.ru/mahachкала/vrach/455423-tamaeva/", qr:"tamaeva.png" },
+  { name:"Терещенко Каринэ Александровна", url:"https://prodoctorov.ru/mahachкала/vrach/539438-tereshenko/", qr:"tereshenko.png" },
+  { name:"Убайдуллаева Аида Абдулвагитовна", url:"https://prodoctorov.ru/mahachкала/vrach/1256140-ubaydullaeva/", qr:"ubaydullaeva.png" },
+  { name:"Шахсинова Раиса Наримановна", url:"https://prodoctorov.ru/mahachкала/vrach/1085216-shahsinova/", qr:"shahsinova.png" },
+  { name:"Шейхмагомедова Заира Адамовна", url:"https://prodoctorov.ru/mahachкала/vrach/455426-shyayhmagomedova/", qr:"sheikhmagomedova.png" }
 ];
 
 const reviews = [
@@ -162,8 +146,7 @@ function selectPlatform(p, el){
     .forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
 
-  select.innerHTML = '<option value="">Выберите...</option>';
-
+  select.innerHTML = '';
   data[p].forEach((item,i)=>{
     const o=document.createElement('option');
     o.value=i;
