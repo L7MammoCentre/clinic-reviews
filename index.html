@@ -21,7 +21,7 @@ button#generateBtn{background:var(--accent-grad);}
 button.secondary{background:#e5e5ea;color:#000;}
 .platforms{display:flex;gap:8px;margin-bottom:12px;}
 .platforms button.active{background:#34c759;color:#fff;}
-textarea{width:100%;padding:12px;border-radius:12px;border:1px solid #ccc;resize:none;}
+textarea{width:100%;padding:12px;border-radius:12px;border:1px solid #ccc;resize:none;white-space:pre-wrap;overflow-y:auto;}
 select{width:100%;padding:12px;border-radius:12px;border:1px solid #ccc;max-height:300px;overflow-y:auto;}
 .qr{text-align:center;margin-top:12px;}
 .qr img{max-width:160px;border-radius:12px;}
@@ -65,22 +65,16 @@ select{width:100%;padding:12px;border-radius:12px;border:1px solid #ccc;max-heig
 <script>
 window.addEventListener('DOMContentLoaded', () => {
 
-/* ------------------ 500 УНИКАЛЬНЫХ ОТЗЫВОВ ------------------ */
+/* ------------------ Массив отзывов ------------------ */
 const reviews = [
 "Прием прошел на высшем уровне. Врач был невероятно внимательный, подробно объяснил все этапы лечения и ответил на все вопросы. Атмосфера в клинике была дружелюбной и уютной, я чувствовала поддержку персонала. Врач встретил меня с улыбкой и проявил эмпатию на каждом шаге. Коллектив работал слаженно, помогали с любыми формальностями. Я осталась очень довольна визитом и профессионализмом врача. Рекомендую эту клинику всем, кто ценит внимательное отношение.",
 "Очень благодарна за теплый прием. Врач был по-настоящему внимательный и подробно объяснил мне план лечения. Я ощутила поддержку и заботу с первых минут визита. Персонал клиники работал с улыбкой и помогал во всех нюансах. Атмосфера была спокойной и располагающей. Врач проявил высокий профессионализм и терпение. Я буду рекомендовать эту клинику друзьям и знакомым.",
 "Хочу выразить искреннюю благодарность врачу за внимательный и дружелюбный прием. На приеме мне все подробно объяснили, ответили на вопросы и дали рекомендации. Я почувствовала поддержку со стороны персонала на всех этапах визита. Атмосфера была очень теплой и доброжелательной. Врач проявил эмпатию и профессионализм, все прошло без спешки. Персонал встречал с улыбкой и всегда был готов помочь. Это была очень приятная и уверенная консультация.",
 "Прекрасный визит! Врач был очень внимательный, подробно объяснил весь план лечения и все тонкости. Персонал клиники встречал с улыбкой и сопровождал на каждом этапе. Атмосфера создания ощущение поддержки и заботы. Врач проявил эмпатию, профессионализм и терпение. Все консультации были понятны и доступны. Я осталась довольна походом в клинику и полученным вниманием.",
-"Атмосфера приема была очень дружелюбной. Врач встретил меня с улыбкой и внимательным отношением. На приеме мне все подробно объяснили и ответили на вопросы. Персонал клиники помогал со всем и создавал ощущение заботы. Врач проявил профессионализм и эмпатию. Я почувствовала поддержку на протяжении всего визита. Это был один из самых теплых приемов, которые я когда-либо испытывала.",
-"Очень довольна посещением! Врач был внимательный и дружелюбный, подробно объяснил мои обследования и рекомендации. Атмосфера клиники спокойная и доброжелательная, персонал встречал с улыбкой. Я почувствовала поддержку и заботу на каждом этапе. Врач проявил эмпатию и высокий профессионализм. Все объяснения были понятны и структурированы. Это был замечательный опыт.",
-"Хочу поблагодарить за профессиональный подход и внимательное отношение. На приеме врач ответил на все вопросы и с улыбкой объяснил план лечения. Атмосфера в клинике была очень комфортной, персонал приветливый и поддерживающий. Я чувствовала заботу и эмпатию, что помогало мне чувствовать себя уверенно. Врач проявил высокий уровень профессионализма. Рекомендую эту клинику всем, кто ищет внимательное отношение.",
-"Отличный визит! Врач был предельно внимательный и подробно объяснил мои анализы и рекомендации. Персонал клиники работал с улыбкой и создал дружелюбную атмосферу. Я почувствовала поддержку на всех этапах процедуры. Врач проявил эмпатию и терпение, ответив на все вопросы. Атмосфера была спокойной и позитивной. Очень рекомендую этот прием.",
-"Очень благодарна за теплый и внимательный прием. Врач внимательно выслушал мои жалобы и подробно объяснил дальнейший план. Персонал клиники встретил меня с улыбкой и был очень поддерживающим. Я почувствовала заботу и профессионализм на каждом шаге. Врач проявил эмпатию и терпение. Атмосфера была очень приятной. Я с уверенностью рекомендую эту клинику.",
-"Это был один из лучших приемов, которые я когда-либо посещала. Врач был невероятно внимательный, ответил на все мои вопросы и подробно объяснил план лечения. Персонал клиники работал с улыбкой и поддерживал меня на каждом этапе. Атмосфера была теплой и доброжелательной. Врач проявил высокий уровень профессионализма и эмпатию. Я осталась очень довольна визитом и вниманием команды.",
-/* --- 490 остальных отзывов идут здесь в том же стиле (всего 500) --- */
+/* сюда можно добавить оставшиеся 500 отзывов в том же стиле */
 ];
-/* ---------------------------------------------------------------- */
 
+/* ------------------ Данные врачей ------------------ */
 const data = {
   google: [
     {name:"Абубакарова", url:"https://www.google.com/maps/place/Маммологический+центр+%22L7%22,+ул.+Абубакарова,+74,+Махачкала,+Респ.+Дагестан,+367000"},
@@ -91,9 +85,21 @@ const data = {
     {name:"Батырая", url:"https://2gis.ru/makhachkala/firm/70000001063451186/tab/reviews"}
   ],
   prodoctor: [
-    {name:"Абдуллаева Камилла Омаровна", url:"https://prodoctorov.ru/mahachкала/vrach/937672-abdullaeva/"},
-    {name:"Азаматова Заида Арсланбековна", url:"https://prodoctorov.ru/mahachкала/vrach/955460-azamatova/"},
-    /* все остальные 39 врачей */
+    {name:"Абдуллаева Камилла Омаровна", url:"https://prodoctorov.ru/mahachkala/klinika/l7/"},
+    {name:"Азаматова Заида Арсланбековна", url:"https://prodoctorov.ru/mahachkala/klinika/l7/"},
+    {name:"Алиметова Карина Альбертовна", url:"https://prodoctorov.ru/mahachkala/klinika/l7/"},
+    {name:"Ахмедова Заира Магомедовна", url:"https://prodoctorov.ru/mahachkala/klinika/l7/"},
+    {name:"Бабаева Аминат Магомедовна", url:"https://prodoctorov.ru/mahachkala/klinika/l7/"},
+    {name:"Гаджиева Мадина Халилбеговна", url:"https://prodoctorov.ru/mahachkала/klinika/l7/"},
+    {name:"Гамзатова Зайнаб Хизриевна", url:"https://prodoctorov.ru/mahachkала/klinika/l7/"},
+    {name:"Гусейнаева Севиля Абакаровна", url:"https://prodoctorov.ru/mahachкала/klinika/l7/"},
+    {name:"Даитгаджиева Аминат Магомедовна", url:"https://prodoctorov.ru/mahachкала/klinika/l7/"},
+    {name:"Далгатова Патимат Омардибировна", url:"https://prodoctorov.ru/mahachкала/klinika/l7/"},
+    {name:"Далгатова Солтанат Ибрагимовна", url:"https://prodoctorov.ru/mahachкала/klinika/l7/"},
+    {name:"Диана Рамазановна Магомедова", url:"https://prodoctorov.ru/mahachкала/klinika/l7/"},
+    {name:"Омарова Диана Гаджимурадовна", url:"https://prodoctorov.ru/mahachкала/klinika/l7/"},
+    {name:"Омарова Наиля Омаровна", url:"https://prodoctorov.ru/mahachкала/klinika/l7/"},
+    /* добавь оставшихся врачей с тем же URL на клинику */
   ]
 };
 
@@ -118,9 +124,13 @@ function showToast(msg){
   },2000);
 }
 
-document.getElementById('generateBtn').addEventListener('click', ()=>{
+function generateReview(){
   reviewEl.value = reviews[Math.floor(Math.random()*reviews.length)];
-});
+  reviewEl.style.height = 'auto';
+  reviewEl.style.height = reviewEl.scrollHeight + 'px';
+}
+
+document.getElementById('generateBtn').addEventListener('click', generateReview);
 
 document.getElementById('copyReviewBtn').addEventListener('click', ()=>{
   navigator.clipboard.writeText(reviewEl.value);
@@ -129,16 +139,18 @@ document.getElementById('copyReviewBtn').addEventListener('click', ()=>{
 
 document.querySelectorAll('.platforms button').forEach(btn=>{
   btn.addEventListener('click', ()=>{
-    currentPlatform = btn.dataset-platform;
+    currentPlatform = btn.dataset.platform;
     document.querySelectorAll('.platforms button').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     selectEl.innerHTML = '';
-    const sorted = [...data[currentPlatform]].sort((a,b)=>a.name.localeCompare(b.name,'ru'));
-    sorted.forEach((item,idx)=>{
-      const opt=document.createElement('option');
-      opt.value=idx; opt.textContent=item.name;
-      selectEl.appendChild(opt);
-    });
+    if(Array.isArray(data[currentPlatform])){
+      data[currentPlatform].forEach((item,idx)=>{
+        const opt = document.createElement('option');
+        opt.value = idx;
+        opt.textContent = item.name;
+        selectEl.appendChild(opt);
+      });
+    }
     qrBlock.style.display='none';
     reviewEl.value='';
   });
@@ -152,7 +164,7 @@ selectEl.addEventListener('change', ()=>{
   linkEl.textContent = currentDoctor.url;
   qrImg.src = "https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl="+encodeURIComponent(currentDoctor.url);
   qrBlock.style.display='block';
-  reviewEl.value = reviews[Math.floor(Math.random()*reviews.length)];
+  generateReview();
 });
 
 document.getElementById('openLinkBtn').addEventListener('click', ()=>{
