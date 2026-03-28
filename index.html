@@ -3,167 +3,216 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Отзывы L7</title>
+<title>L7 Отзывы</title>
+
 <style>
-  :root{--accent:#2e7d32;--muted:#666;--bg:#f4f4f4;--card:#fff}
-  *{box-sizing:border-box}
-  body{margin:0;font-family:Arial, sans-serif;background:var(--bg);color:#111}
-  .wrap{max-width:940px;margin:30px auto;padding:18px}
-  header{display:flex;justify-content:space-between;align-items:center;gap:12px}
-  h1{margin:0;font-size:20px}
-  p.lead{color:var(--muted);margin:6px 0 16px}
-  .panel{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 6px 18px rgba(10,20,30,0.05)}
-  .controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-  button{padding:10px 14px;border:0;border-radius:10px;background:var(--accent);color:#fff;cursor:pointer;font-size:14px}
-  button.secondary{background:#1976d2}
-  textarea{width:100%;min-height:120px;padding:12px;border-radius:10px;border:1px solid #e6eef7;resize:vertical;font-size:15px}
-  .platforms{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
-  .platforms button{background:#555;color:#fff;cursor:pointer;border:0;border-radius:8px;padding:8px 12px;}
-  .platforms button.active{background:#2e7d32;}
-  .qr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px}
-  .qr-card{background:#fafafa;padding:10px;border-radius:10px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
-  .qr-card img{max-width:180px;border-radius:8px;cursor:pointer;transition:transform .2s}
-  .qr-card img:hover{transform:scale(1.05)}
-  .link-btn{padding:8px 10px;border-radius:8px;background:#1976d2;color:#fff;border:0;cursor:pointer;font-size:13px}
-  .link-btn.alt{background:#555}
-  .small{font-size:13px;color:var(--muted)}
-  #toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#333;color:#fff;padding:10px 14px;border-radius:8px;display:none;z-index:999}
-  footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
-  @media (max-width:520px){ .qr-card img{max-width:140px} header{flex-direction:column;align-items:flex-start} }
+:root{
+  --bg:#f2f2f7;
+  --card:rgba(255,255,255,0.7);
+  --blur:blur(20px);
+  --text:#111;
+  --muted:#6e6e73;
+  --accent:#007aff;
+}
+
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+.wrap{
+  max-width:500px;
+  margin:20px auto;
+  padding:16px;
+}
+
+h1{
+  font-size:20px;
+  margin:0 0 6px;
+}
+
+.lead{
+  color:var(--muted);
+  font-size:14px;
+  margin-bottom:16px;
+}
+
+.card{
+  background:var(--card);
+  backdrop-filter:var(--blur);
+  border-radius:18px;
+  padding:14px;
+  margin-bottom:12px;
+  box-shadow:0 8px 30px rgba(0,0,0,0.08);
+}
+
+button{
+  border:none;
+  border-radius:12px;
+  padding:10px;
+  font-size:14px;
+  background:var(--accent);
+  color:white;
+}
+
+button.secondary{
+  background:#e5e5ea;
+  color:#000;
+}
+
+textarea{
+  width:100%;
+  border-radius:12px;
+  border:none;
+  padding:12px;
+  font-size:15px;
+  margin-top:10px;
+  resize:vertical;
+}
+
+select{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  font-size:15px;
+  background:#fff;
+}
+
+.qr{
+  margin-top:12px;
+  text-align:center;
+}
+
+.qr img{
+  max-width:160px;
+  border-radius:12px;
+  margin-top:10px;
+}
+
+.small{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:6px;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+}
+
+#toast{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#333;
+  color:#fff;
+  padding:10px 14px;
+  border-radius:10px;
+  display:none;
+}
 </style>
 </head>
+
 <body>
+
 <div class="wrap">
-  <header>
-    <div>
-      <h1>Оставьте отзыв о центре L7 ❤️</h1>
-      <p class="lead">Сгенерируйте отзыв, скопируйте и откройте нужную площадку / филиал через QR или ссылку.</p>
-    </div>
-    <div class="small">Готово для GitHub Pages</div>
-  </header>
 
-<section style="margin-top:12px" class="panel">
-  <div class="controls">
-    <button id="generateBtn">Сгенерировать текст</button>
-    <button id="copyBtn" class="secondary">Скопировать текст</button>
-  </div>
-  <textarea id="review" placeholder="Здесь появится сгенерированный отзыв..."></textarea>
-</section>
+<h1>Оставьте отзыв ❤️</h1>
+<p class="lead">Сгенерируйте текст и выберите врача</p>
 
-<section style="margin-top:14px" class="panel">
-  <h3 style="margin:0 0 8px">Выберите площадку</h3>
-  <div class="platforms">
-    <button class="platform" data-platform="google">Google</button>
-    <button class="platform" data-platform="2gis">2GIS</button>
-    <button class="platform" data-platform="prodoctor">ПроДокторов</button>
-  </div>
-
-  <div id="qrArea" class="qr-grid" style="margin-top:12px">
-    <div class="small">Выберите платформу выше, чтобы увидеть филиалы / врачей.</div>
-  </div>
-</section>
-
-<footer>© <span id="year"></span> Центр L7</footer>
+<div class="card">
+  <button onclick="generate()">Сгенерировать</button>
+  <button class="secondary" onclick="copyReview()">Скопировать</button>
+  <textarea id="review"></textarea>
 </div>
 
-<div id="toast" role="status" aria-live="polite"></div>
+<div class="card">
+  <select id="doctor"></select>
+
+  <div class="qr" id="qrBlock" style="display:none">
+    <div id="name"></div>
+    <img id="qr">
+    <div class="small" id="link"></div>
+
+    <div class="actions">
+      <button onclick="openLink()">Открыть</button>
+      <button class="secondary" onclick="copyLink()">Копировать</button>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div id="toast"></div>
 
 <script>
-/* Данные QR-кодов */
-const data = {
-  google: [
-    { name: "Абубакарова", url: "https://www.google.com/maps/place/Маммологический+центр+%22L7%22,+ул.+Абубакарова,+74,+Махачкала,+Респ.+Дагестан,+367000/@42.9727081,47.4946757,16z/", qr: "google-abubakarova.png" },
-    { name: "Батырая", url: "https://www.google.com/maps/place/Маммологический+центр+L7,+ул.+Батырая,+88,+Махачкала,+Респ.+Дагестан,+367008/@42.9729789,47.5111132,17z/", qr: "google-batyraya.png" }
-  ],
-  "2gis": [
-    { name: "Абубакарова", url: "https://2gis.ru/makhachkala/firm/70000001036966726/tab/reviews", qr: "gis-abubakarova.png" },
-    { name: "Батырая", url: "https://2gis.ru/makhachkala/firm/70000001063451186/tab/reviews", qr: "gis-batyraya.png" }
-  ],
-  prodoctor: [
-    { name: "Тамаева Фатима Арслановна", url: "https://prodoctorov.ru/mahachkala/vrach/455423-tamaeva/", qr: "tamaeva.png" },
-    { name: "Нуриева Анастасия Мирединовна", url: "https://prodoctorov.ru/mahachkala/vrach/465239-nurieva/", qr: "nurieva.png" }
-  ]
-};
-
-/* Шаблоны отзывов */
-const reviews = [
-  "Очень внимательный врач, всё подробно объяснил. В клинике чисто и приятная атмосфера.",
-  "Спасибо врачу за профессионализм и внимательное отношение.",
-  "Отличная клиника и вежливый персонал. Прием прошел комфортно.",
-  "Врач подробно ответил на все вопросы и дал рекомендации.",
-  "Очень хорошее отношение к пациентам. Осталась довольна приемом."
+const doctors = [
+  { name:"Магомедова Диана", url:"https://prodoctorov.ru/mahachkala/vrach/981164-magomedova/", qr:"magomedova-d.png" },
+  { name:"Магомедова Мадина", url:"https://prodoctorov.ru/mahachkala/vrach/497767-magomedova/", qr:"magomedova-m.png" },
+  { name:"Омарова Диана", url:"https://prodoctorov.ru/mahachkala/vrach/455425-omarova/", qr:"omarova-d.png" },
+  { name:"Абдуллаева", url:"https://prodoctorov.ru/mahachkala/vrach/937672-abdullaeva/", qr:"abdullaeva.png" }
 ];
 
-/* Toast */
-function showToast(msg, ms = 2500){
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.display = 'block';
-  clearTimeout(t._timer);
-  t._timer = setTimeout(()=> t.style.display = 'none', ms);
+const reviews = [
+  "Очень понравился прием, врач внимательный.",
+  "Спасибо за профессионализм.",
+  "Отличная клиника и персонал."
+];
+
+let current = null;
+
+function generate(){
+  review.value = reviews[Math.floor(Math.random()*reviews.length)];
 }
 
-/* Генерация и копирование */
-document.getElementById('generateBtn').addEventListener('click', ()=> {
-  const r = reviews[Math.floor(Math.random()*reviews.length)];
-  document.getElementById('review').value = r;
-});
-
-document.getElementById('copyBtn').addEventListener('click', async ()=> {
-  const text = document.getElementById('review').value || '';
-  if(!text.trim()){ showToast('Поле пустое — сначала сгенерируйте или вставьте текст'); return; }
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    try{ await navigator.clipboard.writeText(text); showToast('Текст скопирован'); }
-    catch(e){ fallbackCopy(text); }
-  } else fallbackCopy(text);
-});
-
-function fallbackCopy(text){
-  const ta = document.createElement('textarea');
-  ta.value = text; ta.style.position = 'fixed'; ta.style.left = '-9999px';
-  document.body.appendChild(ta); ta.select();
-  try{ document.execCommand('copy'); showToast('Текст скопирован (fallback)'); }
-  catch(e){ showToast('Не удалось скопировать. Скопируйте вручную.'); }
-  document.body.removeChild(ta);
+function copyReview(){
+  navigator.clipboard.writeText(review.value);
+  toast("Скопировано");
 }
 
-/* Показ QR и ссылок */
-const qrArea = document.getElementById('qrArea');
-document.querySelectorAll('.platform').forEach(btn => {
-  btn.addEventListener('click', ()=> {
-    document.querySelectorAll('.platform').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    renderPlatform(btn.dataset.platform);
+function init(){
+  doctors.forEach((d,i)=>{
+    const o=document.createElement('option');
+    o.value=i;
+    o.textContent=d.name;
+    doctor.appendChild(o);
   });
-});
 
-function renderPlatform(platform){
-  const list = data[platform] || [];
-  qrArea.innerHTML = '';
-  if(!list.length){ qrArea.innerHTML = '<div class="small">Нет данных для выбранной платформы.</div>'; return; }
-  list.forEach(item => {
-    const card = document.createElement('div'); card.className = 'qr-card';
-    const title = document.createElement('div'); title.textContent = item.name; title.style.fontWeight='600'; title.style.fontSize='14px';
-    const img = document.createElement('img'); img.src = item.qr; img.alt = 'QR ' + item.name; img.loading='lazy';
-    img.addEventListener('click', ()=> openLink(item.url));
-    const small = document.createElement('div'); small.className='small'; small.textContent = item.url; small.style.wordBreak='break-all';
-    const btns = document.createElement('div'); btns.style.display='flex'; btns.style.gap='8px'; btns.style.marginTop='6px';
-    const openBtn = document.createElement('button'); openBtn.className='link-btn'; openBtn.textContent='Открыть'; openBtn.addEventListener('click', ()=> openLink(item.url));
-    const copyBtn = document.createElement('button'); copyBtn.className='link-btn alt'; copyBtn.textContent='Копировать ссылку';
-    copyBtn.addEventListener('click', async ()=> {
-      try{ await navigator.clipboard.writeText(item.url); showToast('Ссылка скопирована'); }
-      catch(e){ fallbackCopy(item.url); }
-    });
-    btns.appendChild(openBtn); btns.appendChild(copyBtn);
-    card.appendChild(title); card.appendChild(img); card.appendChild(small); card.appendChild(btns);
-    qrArea.appendChild(card);
-  });
+  doctor.onchange = ()=>{
+    const d = doctors[doctor.value];
+    current = d;
+
+    name.textContent = d.name;
+    qr.src = d.qr;
+    link.textContent = d.url;
+
+    qrBlock.style.display = 'block';
+  };
 }
 
-function openLink(url){ if(!url) return showToast('Ссылка не задана'); window.open(url, '_blank', 'noopener'); }
+function openLink(){
+  window.open(current.url,'_blank','noopener,noreferrer');
+}
 
-/* init */
-document.getElementById('year').textContent = new Date().getFullYear();
+function copyLink(){
+  navigator.clipboard.writeText(current.url);
+  toast("Ссылка скопирована");
+}
+
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.style.display='block';
+  setTimeout(()=>t.style.display='none',2000);
+}
+
+init();
 </script>
+
 </body>
 </html>
