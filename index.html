@@ -7,26 +7,29 @@
 <style>
 body{margin:0;font-family:-apple-system,sans-serif;background:#f2f2f7;}
 .wrap{max-width:500px;margin:20px auto;padding:16px;}
-.card{background:#fff;border-radius:16px;padding:14px;margin-bottom:12px;}
-button{border:none;border-radius:12px;padding:10px;background:#007aff;color:#fff;}
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.95));border-radius:18px;padding:16px;margin-bottom:16px;box-shadow:0 8px 20px rgba(0,0,0,0.05);transition:transform 0.3s;}
+.card:hover{transform:translateY(-2px);}
+button{border:none;border-radius:12px;padding:12px;background:#007aff;color:#fff;font-weight:500;cursor:pointer;transition:all 0.2s;}
+button:hover{transform:scale(1.05);}
 button.secondary{background:#e5e5ea;color:#000;}
-.platforms{display:flex;gap:8px;margin-bottom:10px;}
-.platforms button.active{background:#34c759;}
-textarea,select{width:100%;padding:12px;border-radius:12px;border:none;margin-top:10px;}
-.qr{text-align:center;margin-top:10px;}
-.qr img{max-width:160px;border-radius:12px;}
+.platforms{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+.platforms button.active{background:#34c759;color:#fff;}
+textarea,select{width:100%;padding:12px;border-radius:12px;border:none;margin-top:10px;box-shadow:0 2px 5px rgba(0,0,0,0.05);}
+.qr{text-align:center;margin-top:12px;opacity:0;transition:opacity 0.5s ease;}
+.qr.show{opacity:1;}
+.qr img{max-width:160px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1);}
 .small{font-size:12px;color:#6e6e73;word-break:break-all;}
 .actions{display:flex;gap:8px;margin-top:10px;}
-#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px;border-radius:10px;display:none;}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 14px;border-radius:12px;display:none;box-shadow:0 4px 12px rgba(0,0,0,0.2);}
 </style>
 </head>
 <body>
 <div class="wrap">
 
 <div class="card">
-  <button onclick="generate()">Сгенерировать</button>
+  <button onclick="generate()">Сгенерировать отзыв</button>
   <button class="secondary" onclick="copyReview()">Скопировать</button>
-  <textarea id="review"></textarea>
+  <textarea id="review" placeholder="Здесь появится сгенерированный отзыв"></textarea>
 </div>
 
 <div class="card">
@@ -38,9 +41,9 @@ textarea,select{width:100%;padding:12px;border-radius:12px;border:none;margin-to
 
 <select id="select"></select>
 
-<div class="qr" id="qrBlock" style="display:none">
-  <div id="name"></div>
-  <img id="qr">
+<div class="qr" id="qrBlock">
+  <div id="name" style="font-weight:600;margin-bottom:6px;"></div>
+  <img id="qr" src="">
   <div class="small" id="link"></div>
   <div class="actions">
     <button onclick="openLink()">Открыть</button>
@@ -53,7 +56,7 @@ textarea,select{width:100%;padding:12px;border-radius:12px;border:none;margin-to
 <div id="toast"></div>
 
 <script>
-// ----------- МАССИВ 500+ ОТЗЫВОВ -----------
+// ---------- ОТЗЫВЫ -----------
 const reviews = [];
 const p1=["Прием прошел комфортно","Визит прошел отлично","Очень довольна приемом","Все прошло спокойно"];
 const p2=["врач был внимательный","доктор очень профессиональный","грамотный специалист","очень внимательный врач"];
@@ -63,41 +66,39 @@ const p5=["все прошло с улыбкой","остались только
 for(let i=0;i<600;i++){
   reviews.push(`${p1[i%4]}. ${p2[i%4]}, ${p3[i%4]}. ${p4[i%4]}. ${p5[i%4]}.`);
 }
+let lastIndex=-1;
 
-// ----------- ДАННЫЕ -----------
+// ---------- ДАННЫЕ -----------
 const data = {
-
-google: [
+google:[
   {name:"Абубакарова", url:"https://www.google.com/maps/place/Маммологический+центр+%22L7%22,+ул.+Абубакарова,+74,+Махачкала,+Респ.+Дагестан,+367000/", qr:"qr/google-abubakarova.png"},
   {name:"Батырая", url:"https://www.google.com/maps/place/Маммологический+центр+L7,+ул.+Батырая,+88,+Махачкала,+Респ.+Дагестан,+367008/", qr:"qr/google-batyraya.png"}
 ],
-
 "2gis":[
   {name:"Абубакарова", url:"https://2gis.ru/makhachkala/firm/70000001036966726/tab/reviews", qr:"qr/gis-abubakarova.png"},
   {name:"Батырая", url:"https://2gis.ru/makhachkala/firm/70000001063451186/tab/reviews", qr:"qr/gis-batyraya.png"}
 ],
-
 prodoctor:[
 {name:"Абдуллаева Камилла Омаровна",url:"https://prodoctorov.ru/mahachkala/vrach/937672-abdullaeva/",qr:"qr/abdullaeva.png"},
 {name:"Азаматова Заида Арсланбековна",url:"https://prodoctorov.ru/mahachkala/vrach/955460-azamatova/",qr:"qr/azamatova.png"},
 {name:"Алиметова Карина Альбертовна",url:"https://prodoctorov.ru/mahachkala/vrach/138973-alimetova/",qr:"qr/alimetova.png"},
-{name:"Ахмедова Заира Магомедовна",url:"https://prodoctorov.ru/mahachkала/vrach/347307-ahmedova/",qr:"qr/ahmedova.png"},
-{name:"Бабаева Аминат Магомедовна",url:"https://prodoctorov.ru/mahachкала/vrach/1129493-babaeva/",qr:"qr/babaeva.png"},
-{name:"Гаджиева Мадина Халилбеговна",url:"https://prodoctorov.ru/mahachкала/vrach/536367-gadzhieva/",qr:"qr/gadzhieva.png"},
+{name:"Ахмедова Заира Магомедовна",url:"https://prodoctorov.ru/mahachkala/vrach/347307-ahmedova/",qr:"qr/ahmedova.png"},
+{name:"Бабаева Аминат Магомедовна",url:"https://prodoctorov.ru/mahachkала/vrach/1129493-babaeva/",qr:"qr/babaeva.png"},
+{name:"Гаджиева Мадина Халилбеговна",url:"https://prodoctorov.ru/mahachkала/vrach/536367-gadzhieva/",qr:"qr/gadzhieva.png"},
 {name:"Гамзатова Зайнаб Хизриевна",url:"https://prodoctorov.ru/mahachкала/vrach/1271257-gamzatova/",qr:"qr/gamzatova.png"},
 {name:"Гусейнаева Севиля Абакаровна",url:"https://prodoctorov.ru/mahachкала/vrach/1332886-gusyaynaeva/",qr:"qr/gusyaynaeva.png"},
 {name:"Даитгаджиева Аминат Магомедовна",url:"https://prodoctorov.ru/mahachкала/vrach/539425-daitgadzhieva/",qr:"qr/daitgadzhieva.png"},
 {name:"Далгатова Патимат Омардибировна",url:"https://prodoctorov.ru/mahachкала/vrach/455427-dalgatova/",qr:"qr/dalgatova-p.png"},
 {name:"Далгатова Солтанат Ибрагимовна",url:"https://prodoctorov.ru/mahachкала/vrach/908802-dalgatova/",qr:"qr/dalgatova-s.png"},
 {name:"Джалилова Заира Абдурахмановна",url:"https://prodoctorov.ru/mahachкала/vrach/631983-dzhalilova/",qr:"qr/dzhalilova.png"},
-{name:"Джамиля Асадулаевна Магомедова",url:"https://prodoctorov.ru/mahachкала/vrach/539435-magomedova/",qr:"qr/magomedova-j.png"},
+{name:"Джамиля Асадулаевна Магомедова",url:"https://prodoctorov.ru/mahachкала/vrach/539435-magomedova/",qr:"qr/magomedova-ja.png"},
 {name:"Диана Рамазановна Магомедова",url:"https://prodoctorov.ru/mahachкала/vrach/981164-magomedova/",qr:"qr/magomedova-d.png"},
 {name:"Закаржаева Заира Магадовна",url:"https://prodoctorov.ru/mahachкала/vrach/900124-zakarzhaeva/",qr:"qr/zakarzhaeva.png"},
 {name:"Ильдарова Милана Гусейновна",url:"https://prodoctorov.ru/mahachкала/vrach/1328769-ildarova/",qr:"qr/ildarova.png"},
 {name:"Исмаилова Фируза Фаталиевна",url:"https://prodoctorov.ru/mahachкала/vrach/1319798-ismailova/",qr:"qr/ismailova.png"},
 {name:"Магомедова Изольда Абдулаевна",url:"https://prodoctorov.ru/mahachкала/vrach/383962-magomedova/",qr:"qr/magomedova-i.png"},
 {name:"Магомедова Фариза Магомедовна",url:"https://prodoctorov.ru/mahachкала/vrach/776993-magomedova/",qr:"qr/magomedova-f.png"},
-{name:"Магомедов Омардибир",url:"https://prodoctorov.ru/mahachкала/vrach/131808-magomedov/",qr:"qr/magomedov.png"},
+{name:"Магомедов Омардибир",url:"https://prodoctorov.ru/mahachкала/vrach/131808-magomedov/",qr:"qr/magomedov-o.png"},
 {name:"Мадина Абдулхалимовна Магомедова",url:"https://prodoctorov.ru/mahachкала/vrach/497767-magomedova/",qr:"qr/magomedova-m.png"},
 {name:"Мехтиханова Дженнет Мурадовна",url:"https://prodoctorov.ru/mahachкала/vrach/383964-mehtihanova/",qr:"qr/mehtihanova.png"},
 {name:"Мурачуев Мирза Ажубович",url:"https://prodoctorov.ru/mahachкала/vrach/458593-murachuev/",qr:"qr/murachuev.png"},
@@ -116,26 +117,31 @@ prodoctor:[
 {name:"Терещенко Каринэ Александровна",url:"https://prodoctorov.ru/mahachкала/vrach/539438-tereshenko/",qr:"qr/tereshenko.png"},
 {name:"Убайдуллаева Аида Абдулвагитовна",url:"https://prodoctorov.ru/mahachкала/vrach/1256140-ubaydullaeva/",qr:"qr/ubaydullaeva.png"},
 {name:"Шахсинова Раиса Наримановна",url:"https://prodoctorov.ru/mahachкала/vrach/1085216-shahsinova/",qr:"qr/shahsinova.png"},
-{name:"Шейхмагомедова Заира Адамовна",url:"https://prodoctorov.ru/mahachкала/vrach/455426-shyayhmagomedova/",qr:"qr/shyayhmagomedova.png"}
+{name:"Шейхмагомедова Заира Адамовна",url:"https://prodoctorov.ru/mahachкала/vrach/455426-shyayhmagomedova/",qr:"qr/sheikhmagomedova.png"}
 ]
-
 };
 
-// ----------- ЛОГИКА -----------
-
+// ---------- ЛОГИКА -----------
 let current=null;
 let currentPlatform=null;
 
-function generate(){ review.value = reviews[Math.floor(Math.random()*reviews.length)]; }
+function generate(){ 
+  let index;
+  do { index=Math.floor(Math.random()*reviews.length); } while(index===lastIndex);
+  lastIndex=index;
+  review.value=reviews[index];
+  review.scrollTop=0;
+}
+
 function copyReview(){ navigator.clipboard.writeText(review.value); toast("Скопировано"); }
 
 function selectPlatform(p,el){
   currentPlatform=p;
   document.querySelectorAll('.platforms button').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
-  select.innerHTML='<option value="">Выберите...</option>';
+  select.innerHTML='<option value="">Выберите врача...</option>';
   data[p].forEach((item,i)=>{ const o=document.createElement('option'); o.value=i; o.textContent=item.name; select.appendChild(o); });
-  qrBlock.style.display='none';
+  qrBlock.classList.remove('show');
 }
 
 select.onchange=()=>{
@@ -145,11 +151,11 @@ select.onchange=()=>{
   name.textContent=item.name;
   qr.src=item.qr;
   link.textContent=item.url;
-  qrBlock.style.display='block';
+  qrBlock.classList.add('show');
 };
 
-function openLink(){ window.open(current.url,'_blank'); }
-function copyLink(){ navigator.clipboard.writeText(current.url); toast("Ссылка скопирована"); }
+function openLink(){ if(current) window.open(current.url,'_blank'); }
+function copyLink(){ if(current) navigator.clipboard.writeText(current.url); toast("Ссылка скопирована"); }
 function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.style.display='block'; setTimeout(()=>t.style.display='none',2000); }
 </script>
 </body>
