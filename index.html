@@ -52,7 +52,9 @@ textarea,select{
   <button onclick="selectPlatform('prodoctor',this)">ПроДокторов</button>
 </div>
 
-<select id="select"></select>
+<select id="select">
+  <option value="">Выберите...</option>
+</select>
 
 <div class="qr" id="qrBlock">
   <div id="name" style="font-weight:600;margin-bottom:6px;"></div>
@@ -122,51 +124,36 @@ prodoctor:[
 ]
 };
 
-// ----------------- AI генерация отзывов -----------------
+// ----------------- ФУНКЦИИ -----------------
 let current=null;
 let currentPlatform=null;
 
-async function generate(){
-  review.value = "Генерируем отзыв...";
-  try {
-    const resp = await fetch("http://localhost:3000/generate-review", {
-      method:"POST",
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        criteria:"Описание приёма, впечатление от врача и коллектива клиники, эмпатичный приём, дружелюбный и эмоциональный стиль, слова: внимательный, профессиональный, с улыбкой, подробно объяснил, грамотный специалист, поддержка"
-      })
-    });
-    const data = await resp.json();
-    review.value = data.text;
-  } catch(e){
-    review.value = "Ошибка при генерации. Попробуйте снова.";
-  }
+function generate(){
+  const reviews=[
+    "Очень внимательный врач, подробно объяснил всё с улыбкой, атмосфера была дружелюбной, поддержка персонала ощущалась на каждом шагу.",
+    "Приятный приём, грамотный специалист, всё было понятно и доступно, коллектив клиники внимательный и поддерживает пациента.",
+    "Врач встретил с улыбкой, подробно объяснил все нюансы, чувствуется профессионализм и забота о каждом пациенте.",
+    "Приём прошёл комфортно, врач внимательный и дружелюбный, поддержка персонала ощущалась на протяжении всего визита."
+  ];
+  review.value=reviews[Math.floor(Math.random()*reviews.length)];
 }
 
-// ----------------- Остальной функционал -----------------
 function copyReview(){ navigator.clipboard.writeText(review.value); toast("Скопировано"); }
 
 function selectPlatform(p,el){
   currentPlatform=p;
   document.querySelectorAll('.platforms button').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
-  if(p==='prodoctor'){
-    select.innerHTML='<option value="">Выберите врача...</option>';
-  } else {
-    select.innerHTML='<option value="">Выберите филиал...</option>';
-  }
+  select.innerHTML='';
+  const placeholder = p==='prodoctor'?'Выберите врача...':'Выберите филиал...';
+  const o0=document.createElement('option'); o0.value=''; o0.textContent=placeholder; select.appendChild(o0);
   data[p].forEach((item,i)=>{ const o=document.createElement('option'); o.value=i; o.textContent=item.name; select.appendChild(o); });
   qrBlock.classList.remove('show');
 }
 
 select.onchange=()=>{
-  const item=data[currentPlatform][select.value];
-  if(!item) return;
-  current=item;
-  name.textContent=item.name;
-  qr.src=item.qr;
-  link.textContent=item.url;
-  qrBlock.classList.add('show');
+  const item=data[currentPlatform][select.value]; if(!item) return;
+  current=item; name.textContent=item.name; qr.src=item.qr; link.textContent=item.url; qrBlock.classList.add('show');
 };
 
 function openLink(){ if(current) window.open(current.url,'_blank'); }
