@@ -6,27 +6,31 @@
 <title>L7 Отзывы</title>
 <style>
 :root{
-  --bg:#f2f2f7;
-  --card:rgba(255,255,255,0.7);
-  --blur:blur(20px);
+  --bg:#f0f2f5;
+  --card:#fff;
   --text:#111;
   --muted:#6e6e73;
   --accent:#007aff;
+  --accent-grad:linear-gradient(90deg,#007aff,#34c759);
 }
 body{margin:0;font-family:-apple-system,sans-serif;background:var(--bg);}
 .wrap{max-width:500px;margin:20px auto;padding:16px;}
-.card{background:var(--card);backdrop-filter:var(--blur);border-radius:18px;padding:14px;margin-bottom:12px;}
-button{border:none;border-radius:12px;padding:10px;background:var(--accent);color:#fff;cursor:pointer;}
+.card{background:var(--card);border-radius:18px;padding:14px;margin-bottom:16px;box-shadow:0 8px 16px rgba(0,0,0,0.1);transition:all 0.3s;}
+.card:hover{transform:translateY(-2px);}
+button{border:none;border-radius:12px;padding:10px 16px;color:#fff;cursor:pointer;transition:0.2s;}
+button#generateBtn{background:var(--accent-grad);}
+button:hover{opacity:0.9;}
 button.secondary{background:#e5e5ea;color:#000;}
-.platforms{display:flex;gap:8px;margin-bottom:10px;}
-.platforms button.active{background:#34c759;}
-textarea{width:100%;padding:12px;border-radius:12px;border:none;margin-top:10px;}
-select{width:100%;padding:12px;border-radius:12px;border:none;margin-top:10px;max-height:300px;overflow-y:auto;}
-.qr{text-align:center;margin-top:10px;}
-.qr img{max-width:160px;border-radius:12px;}
+.platforms{display:flex;gap:8px;margin-bottom:12px;}
+.platforms button.active{background:#34c759;color:#fff;}
+textarea{width:100%;padding:12px;border-radius:12px;border:1px solid #ccc;margin-top:10px;resize:none;}
+select{width:100%;padding:12px;border-radius:12px;border:1px solid #ccc;margin-top:10px;max-height:300px;overflow-y:auto;}
+.qr{text-align:center;margin-top:12px;transition:0.3s;position:relative;}
+.qr img{max-width:160px;border-radius:12px;transition:0.3s;}
+.qr img:hover::after{content:"Наведите для ссылки на отзыв";}
 .small{font-size:12px;color:var(--muted);word-break:break-all;}
 .actions{display:flex;gap:8px;margin-top:10px;}
-#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px;border-radius:10px;display:none;}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px;border-radius:10px;display:none;opacity:0;transition:0.3s;}
 </style>
 </head>
 <body>
@@ -35,7 +39,7 @@ select{width:100%;padding:12px;border-radius:12px;border:none;margin-top:10px;ma
 <div class="card">
   <button id="generateBtn">Сгенерировать</button>
   <button class="secondary" id="copyReviewBtn">Скопировать</button>
-  <textarea id="review"></textarea>
+  <textarea id="review" rows="2" readonly></textarea>
 </div>
 
 <div class="card">
@@ -49,7 +53,7 @@ select{width:100%;padding:12px;border-radius:12px;border:none;margin-top:10px;ma
 
 <div class="qr" id="qrBlock" style="display:none">
   <div id="name"></div>
-  <img id="qr" alt="QR">
+  <img id="qr" alt="QR" title="Наведите для ссылки на отзыв">
   <div class="small" id="link"></div>
   <div class="actions">
     <button id="openLinkBtn">Открыть</button>
@@ -63,7 +67,6 @@ select{width:100%;padding:12px;border-radius:12px;border:none;margin-top:10px;ma
 
 <script>
 window.addEventListener('DOMContentLoaded', () => {
-
 const reviews = [
   "Очень внимательный врач, всё объяснил.",
   "Спасибо за профессионализм.",
@@ -80,7 +83,6 @@ const qrImg = document.getElementById('qr');
 const nameEl = document.getElementById('name');
 const linkEl = document.getElementById('link');
 
-// ==================== ДАННЫЕ ВРАЧЕЙ ====================
 const data = {
   google: [
     {name:"Абубакарова", url:"https://www.google.com/maps/place/Маммологический+центр+%22L7%22,+ул.+Абубакарова,+74,+Махачкала,+Респ.+Дагестан,+367000"},
@@ -91,7 +93,7 @@ const data = {
     {name:"Батырая", url:"https://2gis.ru/makhachkala/firm/70000001063451186/tab/reviews"}
   ],
   prodoctor: [
-    {name:"Абдуллаева Камилла Омаровна", url:"https://prodoctorov.ru/mahachkala/vrach/937672-abdullaeva/"},
+    {name:"Абдуллаева Камилла Омаровна", url:"https://prodoctorov.ru/mahachkала/vrach/937672-abdullaeva/"},
     {name:"Азаматова Заида Арсланбековна", url:"https://prodoctorov.ru/mahachкала/vrach/955460-azamatova/"},
     {name:"Алиметова Карина Альбертовна", url:"https://prodoctorov.ru/mahachкала/vrach/138973-alimetova/"},
     {name:"Ахмедова Заира Магомедовна", url:"https://prodoctorov.ru/mahachкала/vrach/347307-ahmedova/"},
@@ -132,7 +134,18 @@ const data = {
     {name:"Шейхмагомедова Заира Адамовна", url:"https://prodoctorov.ru/mahachкала/vrach/455426-shyayhmagomedova/"}
   ]
 };
-// =========================================================
+
+// ===================== Основной функционал =====================
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display='block';
+  t.style.opacity = '1';
+  setTimeout(()=>{
+    t.style.opacity='0';
+    setTimeout(()=>t.style.display='none',300);
+  },2000);
+}
 
 document.getElementById('generateBtn').addEventListener('click', ()=>{
   reviewEl.value = reviews[Math.floor(Math.random()*reviews.length)];
@@ -149,25 +162,29 @@ document.querySelectorAll('.platforms button').forEach(btn=>{
     document.querySelectorAll('.platforms button').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
 
-    selectEl.innerHTML = '';
-    data[currentPlatform].forEach((item, idx)=>{
-      const opt = document.createElement('option');
-      opt.value = idx;
-      opt.textContent = item.name;
+    // Сортировка по имени
+    const sorted = [...data[currentPlatform]].sort((a,b)=>a.name.localeCompare(b.name,'ru'));
+    selectEl.innerHTML='';
+    sorted.forEach((item,idx)=>{
+      const opt=document.createElement('option');
+      opt.value=idx;
+      opt.textContent=item.name;
       selectEl.appendChild(opt);
     });
-    qrBlock.style.display = 'none';
+    qrBlock.style.display='none';
+    reviewEl.value='';
   });
 });
 
 selectEl.addEventListener('change', ()=>{
   const idx = selectEl.value;
-  if(idx === '') return;
-  currentDoctor = data[currentPlatform][idx];
+  if(idx==='') return;
+  currentDoctor = data[currentPlatform].sort((a,b)=>a.name.localeCompare(b.name,'ru'))[idx];
   nameEl.textContent = currentDoctor.name;
   linkEl.textContent = currentDoctor.url;
   qrImg.src = "https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl="+encodeURIComponent(currentDoctor.url);
-  qrBlock.style.display = 'block';
+  qrBlock.style.display='block';
+  reviewEl.value = reviews[Math.floor(Math.random()*reviews.length)]; // авто-ген отзыв
 });
 
 document.getElementById('openLinkBtn').addEventListener('click', ()=>{
@@ -180,14 +197,6 @@ document.getElementById('copyLinkBtn').addEventListener('click', ()=>{
     showToast("Ссылка скопирована");
   }
 });
-
-function showToast(msg){
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.display='block';
-  setTimeout(()=>t.style.display='none',2000);
-}
-
 });
 </script>
 </body>
