@@ -4,57 +4,50 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>L7 Отзывы</title>
+
 <style>
-:root{
-  --bg:#f0f2f5;
-  --card:#fff;
-  --text:#111;
-  --muted:#6e6e73;
-  --accent:#007aff;
-  --accent-grad:linear-gradient(90deg,#007aff,#34c759);
-}
-body{margin:0;font-family:-apple-system,sans-serif;background:var(--bg);}
+body{margin:0;font-family:-apple-system;background:#f2f2f7;}
 .wrap{max-width:500px;margin:20px auto;padding:16px;}
-.card{background:var(--card);border-radius:18px;padding:14px;margin-bottom:16px;box-shadow:0 8px 16px rgba(0,0,0,0.1);}
-button{border:none;border-radius:12px;padding:10px 16px;color:#fff;cursor:pointer;}
-button#generateBtn{background:var(--accent-grad);}
+.card{background:#fff;border-radius:16px;padding:14px;margin-bottom:12px;}
+button{border:none;border-radius:12px;padding:10px;background:#007aff;color:#fff;}
 button.secondary{background:#e5e5ea;color:#000;}
-.platforms{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
-.platforms button.active{background:#34c759;color:#fff;}
-textarea{width:100%;padding:12px;border-radius:12px;border:1px solid #ccc;resize:none;white-space:pre-wrap;overflow-y:auto;}
-select{width:100%;padding:12px;border-radius:12px;border:1px solid #ccc;max-height:300px;overflow-y:auto;}
-.qr{text-align:center;margin-top:12px;}
+.platforms{display:flex;gap:8px;margin-bottom:10px;}
+.platforms button.active{background:#34c759;}
+textarea,select{width:100%;padding:12px;border-radius:12px;border:none;margin-top:10px;}
+.qr{text-align:center;margin-top:10px;}
 .qr img{max-width:160px;border-radius:12px;}
-.small{font-size:12px;color:var(--muted);word-break:break-all;}
+.small{font-size:12px;color:#6e6e73;word-break:break-all;}
 .actions{display:flex;gap:8px;margin-top:10px;}
-#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px;border-radius:10px;display:none;opacity:0;transition:opacity 0.3s;}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px;border-radius:10px;display:none;}
 </style>
 </head>
+
 <body>
 <div class="wrap">
 
 <div class="card">
-  <button id="generateBtn">Сгенерировать</button>
-  <button class="secondary" id="copyReviewBtn">Скопировать</button>
-  <textarea id="review" rows="5" readonly></textarea>
+  <button onclick="generate()">Сгенерировать</button>
+  <button class="secondary" onclick="copyReview()">Скопировать</button>
+  <textarea id="review"></textarea>
 </div>
 
 <div class="card">
 <div class="platforms">
-  <button data-platform="google">Google</button>
-  <button data-platform="2gis">2GIS</button>
-  <button data-platform="prodoctor">ПроДокторов</button>
+  <button onclick="selectPlatform('google',this)">Google</button>
+  <button onclick="selectPlatform('2gis',this)">2GIS</button>
+  <button onclick="selectPlatform('prodoctor',this)">ПроДокторов</button>
 </div>
 
-<select id="select"><option value="">Выберите врача...</option></select>
+<select id="select"></select>
 
 <div class="qr" id="qrBlock" style="display:none">
   <div id="name"></div>
-  <img id="qr" alt="QR">
+  <img id="qr">
   <div class="small" id="link"></div>
+
   <div class="actions">
-    <button id="openLinkBtn">Открыть</button>
-    <button class="secondary" id="copyLinkBtn">Копировать</button>
+    <button onclick="openLink()">Открыть</button>
+    <button class="secondary" onclick="copyLink()">Копировать</button>
   </div>
 </div>
 </div>
@@ -63,140 +56,158 @@ select{width:100%;padding:12px;border-radius:12px;border:1px solid #ccc;max-heig
 <div id="toast"></div>
 
 <script>
-window.addEventListener('DOMContentLoaded', () => {
 
-// ------------------ Пример отзывов ------------------
-const reviews = [
-"Прием прошел на высшем уровне. Врач был внимательный, подробно объяснил все этапы лечения, атмосфера была дружелюбной, коллектив поддерживал, все с улыбкой. Я осталась довольна визитом.",
-"Очень благодарна за теплый прием. Врач профессиональный, с улыбкой объяснил план лечения, персонал поддерживал, атмосфера уютная. Рекомендую клинику друзьям.",
-"Врач внимательный и профессиональный, все объяснил подробно. Атмосфера клиники дружелюбная, коллектив отзывчивый, чувствуется поддержка и забота. Прийду снова с улыбкой."
-];
+// ----------- ЖИВЫЕ ОТЗЫВЫ (много) -----------
+const reviews = [];
+const phrases1 = ["Прием прошел комфортно","Визит прошел отлично","Очень довольна приемом","Все прошло спокойно"];
+const phrases2 = ["врач был внимательный","доктор очень профессиональный","грамотный специалист","очень внимательный врач"];
+const phrases3 = ["подробно объяснил все","ответил на все вопросы","все объяснил понятным языком","подробно рассказал о лечении"];
+const phrases4 = ["в клинике приятная атмосфера","коллектив очень доброжелательный","персонал вежливый","чувствуется поддержка"];
+const phrases5 = ["все прошло с улыбкой","остались только положительные эмоции","обязательно вернусь","рекомендую клинику"];
 
-// ------------------ Данные всех 39 врачей с локальными PNG ------------------
+for(let i=0;i<600;i++){
+  reviews.push(
+    `${phrases1[i%4]}. ${phrases2[i%4]}, ${phrases3[i%4]}. ${phrases4[i%4]}. ${phrases5[i%4]}.`
+  );
+}
+
+// ----------- ДАННЫЕ -----------
 const data = {
-  google: [],
-  "2gis": [],
-  prodoctor: [
-    {name:"Абдуллаева Камилла Омаровна", url:"https://prodoctorov.ru/mahachkala/vrach/937672-abdullaeva/", qr:"qr/abdullaeva.png"},
-    {name:"Азаматова Заида Арсланбековна", url:"https://prodoctorov.ru/mahachkала/vrach/955460-azamatova/", qr:"qr/azamatova.png"},
-    {name:"Алиметова Карина Альбертовна", url:"https://prodoctorov.ru/mahachкала/vrach/138973-alimetova/", qr:"qr/alimetova.png"},
-    {name:"Ахмедова Заира Магомедовна", url:"https://prodoctorov.ru/mahachкала/vrach/347307-ahmedova/", qr:"qr/ahmedova.png"},
-    {name:"Бабаева Аминат Магомедовна", url:"https://prodoctorov.ru/mahachкала/vrach/1129493-babaeva/", qr:"qr/babaeva.png"},
-    {name:"Гаджиева Мадина Халилбеговна", url:"https://prodoctorov.ru/mahachкала/vrach/536367-gadzhieva/", qr:"qr/gadzhieva.png"},
-    {name:"Гамзатова Зайнаб Хизриевна", url:"https://prodoctorov.ru/mahachкала/vrach/1271257-gamzatova/", qr:"qr/gamzatova.png"},
-    {name:"Гусейнаева Севиля Абакаровна", url:"https://prodoctorov.ru/mahachкала/vrach/1332886-gusyaynaeva/", qr:"qr/gusyaynaeva.png"},
-    {name:"Даитгаджиева Аминат Магомедовна", url:"https://prodoctorov.ru/mahachкала/vrach/539425-daitgadzhieva/", qr:"qr/daitgadzhieva.png"},
-    {name:"Далгатова Патимат Омардибировна", url:"https://prodoctorov.ru/mahachкала/vrach/455427-dalgatova/", qr:"qr/dalgatova-p.png"},
-    {name:"Далгатова Солтанат Ибрагимовна", url:"https://prodoctorov.ru/mahachкала/vrach/908802-dalgatova/", qr:"qr/dalgatova-s.png"},
-    {name:"Джалилова Заира Абдурахмановна", url:"https://prodoctorov.ru/mahachкала/vrach/631983-dzhalilova/", qr:"qr/dzhalilova.png"},
-    {name:"Джамиля Асадулаевна Магомедова", url:"https://prodoctorov.ru/mahachкала/vrach/539435-magomedova/", qr:"qr/magomedova-j.png"},
-    {name:"Диана Рамазановна Магомедова", url:"https://prodoctorov.ru/mahachкала/vrach/981164-magomedova/", qr:"qr/magomedova-d.png"},
-    {name:"Закаржаева Заира Магадовна", url:"https://prodoctorov.ru/mahachкала/vrach/900124-zakarzhaeva/", qr:"qr/zakarzhaeva.png"},
-    {name:"Ильдарова Милана Гусейновна", url:"https://prodoctorov.ru/mahachкала/vrach/1328769-ildarova/", qr:"qr/ildarova.png"},
-    {name:"Исмаилова Фируза Фаталиевна", url:"https://prodoctorov.ru/mahachкала/vrach/1319798-ismailova/", qr:"qr/ismailova.png"},
-    {name:"Магомедова Изольда Абдулаевна", url:"https://prodoctorov.ru/mahachкала/vrach/383962-magomedova/", qr:"qr/magomedova-i.png"},
-    {name:"Магомедова Фариза Магомедовна", url:"https://prodoctorov.ru/mahachкала/vrach/776993-magomedova/", qr:"qr/magomedova-f.png"},
-    {name:"Магомедов Омардибир", url:"https://prodoctorov.ru/mahachкала/vrach/131808-magomedov/", qr:"qr/magomedov.png"},
-    {name:"Мадина Абдулхалимовна Магомедова", url:"https://prodoctorov.ru/mahachкала/vrach/497767-magomedova/", qr:"qr/magomedova-m.png"},
-    {name:"Мехтиханова Дженнет Мурадовна", url:"https://prodoctorov.ru/mahachкала/vrach/383964-mehtihanova/", qr:"qr/mehtihanova.png"},
-    {name:"Мурачуев Мирза Ажубович", url:"https://prodoctorov.ru/mahachкала/vrach/458593-murachuev/", qr:"qr/murachuev.png"},
-    {name:"Муслимова Батибат Магомедариповна", url:"https://prodoctorov.ru/mahachкала/vrach/906858-muslimova/", qr:"qr/muslimova.png"},
-    {name:"Нураева Тамара Шамильевна", url:"https://prodoctorov.ru/mahachкала/vrach/455422-nuraeva/", qr:"qr/nuraeva.png"},
-    {name:"Нуриева Анастасия Мирединовна", url:"https://prodoctorov.ru/mahachкала/vrach/465239-nurieva/", qr:"qr/nurieva.png"},
-    {name:"Омарова Диана Гаджимурадовна", url:"https://prodoctorov.ru/mahachкала/vrach/455425-omarova/", qr:"qr/omarova-d.png"},
-    {name:"Омарова Наиля Омаровна", url:"https://prodoctorov.ru/mahachкала/vrach/606299-omarova/", qr:"qr/omarova-n.png"},
-    {name:"Омарова Оксана Магомедовна", url:"https://prodoctorov.ru/mahachкала/vrach/539403-omarova/", qr:"qr/omarova-o.png"},
-    {name:"Рамазанова Заира Джамутдиновна", url:"https://prodoctorov.ru/mahachкала/vrach/555316-ramazanova/", qr:"qr/ramazanova.png"},
-    {name:"Саидова Аминат Шамиловна", url:"https://prodoctorov.ru/mahachкала/vrach/900185-saidova/", qr:"qr/saidova.png"},
-    {name:"Сулейманова Ирина Гасниевна", url:"https://prodoctorov.ru/mahachкала/vrach/273383-sulyaymanova/", qr:"qr/suleymanova.png"},
-    {name:"Сурхаева Гидаят Камиловна", url:"https://prodoctorov.ru/mahachкала/vrach/1346571-surhaeva/", qr:"qr/surhaeva.png"},
-    {name:"Тагирова Айша Гаджиевна", url:"https://prodoctorov.ru/mahachкала/vrach/455421-tagirova/", qr:"qr/tagirova.png"},
-    {name:"Тамаева Фатима Арслановна", url:"https://prodoctorov.ru/mahachкала/vrach/455423-tamaeva/", qr:"qr/tamaeva.png"},
-    {name:"Терещенко Каринэ Александровна", url:"https://prodoctorov.ru/mahachкала/vrach/539438-tereshenko/", qr:"qr/tereshenko.png"},
-    {name:"Убайдуллаева Аида Абдулвагитовна", url:"https://prodoctorov.ru/mahachкала/vrach/1256140-ubaydullaeva/", qr:"qr/ubaydullaeva.png"},
-    {name:"Шахсинова Раиса Наримановна", url:"https://prodoctorov.ru/mahachкала/vrach/1085216-shahsinova/", qr:"qr/shahsinova.png"},
-    {name:"Шейхмагомедова Заира Адамовна", url:"https://prodoctorov.ru/mahachкала/vrach/455426-shyayhmagomedova/", qr:"qr/shyayhmagomedova.png"}
-  ]
+
+google:[
+{
+name:"Абубакарова",
+url:"https://www.google.com/maps/place/Маммологический+центр+L7,+Махачкала",
+qr:"qr/google-abubakarova.png"
+},
+{
+name:"Батырая",
+url:"https://www.google.com/maps/place/Маммологический+центр+L7,+Махачкала",
+qr:"qr/google-batyraya.png"
+}
+],
+
+"2gis":[
+{
+name:"Абубакарова",
+url:"https://2gis.ru/makhachkala/search/L7",
+qr:"qr/gis-abubakarova.png"
+},
+{
+name:"Батырая",
+url:"https://2gis.ru/makhachkala/search/L7",
+qr:"qr/gis-batyraya.png"
+}
+],
+
+prodoctor:[
+
+// ВСЕ 39 ВРАЧЕЙ С ТВОИМИ ССЫЛКАМИ
+{name:"Абдуллаева Камилла Омаровна",url:"https://prodoctorov.ru/mahachkala/vrach/937672-abdullaeva/",qr:"qr/abdullaeva.png"},
+{name:"Азаматова Заида Арсланбековна",url:"https://prodoctorov.ru/mahachkala/vrach/955460-azamatova/",qr:"qr/azamatova.png"},
+{name:"Алиметова Карина Альбертовна",url:"https://prodoctorov.ru/mahachkala/vrach/138973-alimetova/",qr:"qr/alimetova.png"},
+{name:"Ахмедова Заира Магомедовна",url:"https://prodoctorov.ru/mahachkala/vrach/347307-ahmedova/",qr:"qr/ahmedova.png"},
+{name:"Бабаева Аминат Магомедовна",url:"https://prodoctorov.ru/mahachkala/vrach/1129493-babaeva/",qr:"qr/babaeva.png"},
+{name:"Гаджиева Мадина Халилбеговна",url:"https://prodoctorov.ru/mahachkala/vrach/536367-gadzhieva/",qr:"qr/gadzhieva.png"},
+{name:"Гамзатова Зайнаб Хизриевна",url:"https://prodoctorov.ru/mahachkala/vrach/1271257-gamzatova/",qr:"qr/gamzatova.png"},
+{name:"Гусейнаева Севиля Абакаровна",url:"https://prodoctorov.ru/mahachkala/vrach/1332886-gusyaynaeva/",qr:"qr/gusyaynaeva.png"},
+{name:"Даитгаджиева Аминат Магомедовна",url:"https://prodoctorov.ru/mahachkala/vrach/539425-daitgadzhieva/",qr:"qr/daitgadzhieva.png"},
+{name:"Далгатова Патимат Омардибировна",url:"https://prodoctorov.ru/mahachkala/vrach/455427-dalgatova/",qr:"qr/dalgatova-p.png"},
+{name:"Далгатова Солтанат Ибрагимовна",url:"https://prodoctorov.ru/mahachkala/vrach/908802-dalgatova/",qr:"qr/dalgatova-s.png"},
+{name:"Джалилова Заира Абдурахмановна",url:"https://prodoctorov.ru/mahachkala/vrach/631983-dzhalilova/",qr:"qr/dzhalilova.png"},
+{name:"Джамиля Асадулаевна Магомедова",url:"https://prodoctorov.ru/mahachkala/vrach/539435-magomedova/",qr:"qr/magomedova-j.png"},
+{name:"Диана Рамазановна Магомедова",url:"https://prodoctorov.ru/mahachkala/vrach/981164-magomedova/",qr:"qr/magomedova-d.png"},
+{name:"Закаржаева Заира Магадовна",url:"https://prodoctorov.ru/mahachkala/vrach/900124-zakarzhaeva/",qr:"qr/zakarzhaeva.png"},
+{name:"Ильдарова Милана Гусейновна",url:"https://prodoctorov.ru/mahachkala/vrach/1328769-ildarova/",qr:"qr/ildarova.png"},
+{name:"Исмаилова Фируза Фаталиевна",url:"https://prodoctorov.ru/mahachkala/vrach/1319798-ismailova/",qr:"qr/ismailova.png"},
+{name:"Магомедова Изольда Абдулаевна",url:"https://prodoctorov.ru/mahachkala/vrach/383962-magomedova/",qr:"qr/magomedova-i.png"},
+{name:"Магомедова Фариза Магомедовна",url:"https://prodoctorov.ru/mahachkala/vrach/776993-magomedova/",qr:"qr/magomedova-f.png"},
+{name:"Магомедов Омардибир",url:"https://prodoctorov.ru/mahachkala/vrach/131808-magomedov/",qr:"qr/magomedov.png"},
+{name:"Мадина Абдулхалимовна Магомедова",url:"https://prodoctorov.ru/mahachkala/vrach/497767-magomedova/",qr:"qr/magomedova-m.png"},
+{name:"Мехтиханова Дженнет Мурадовна",url:"https://prodoctorov.ru/mahachkala/vrach/383964-mehtihanova/",qr:"qr/mehtihanova.png"},
+{name:"Мурачуев Мирза Ажубович",url:"https://prodoctorov.ru/mahachkala/vrach/458593-murachuev/",qr:"qr/murachuev.png"},
+{name:"Муслимова Батибат Магомедариповна",url:"https://prodoctorov.ru/mahachkala/vrach/906858-muslimova/",qr:"qr/muslimova.png"},
+{name:"Нураева Тамара Шамильевна",url:"https://prodoctorov.ru/mahachkala/vrach/455422-nuraeva/",qr:"qr/nuraeva.png"},
+{name:"Нуриева Анастасия Мирединовна",url:"https://prodoctorov.ru/mahachkala/vrach/465239-nurieva/",qr:"qr/nurieva.png"},
+{name:"Омарова Диана Гаджимурадовна",url:"https://prodoctorov.ru/mahachkala/vrach/455425-omarova/",qr:"qr/omarova-d.png"},
+{name:"Омарова Наиля Омаровна",url:"https://prodoctorov.ru/mahachkala/vrach/606299-omarova/",qr:"qr/omarova-n.png"},
+{name:"Омарова Оксана Магомедовна",url:"https://prodoctorov.ru/mahachkala/vrach/539403-omarova/",qr:"qr/omarova-o.png"},
+{name:"Рамазанова Заира Джамутдиновна",url:"https://prodoctorov.ru/mahachkala/vrach/555316-ramazanova/",qr:"qr/ramazanova.png"},
+{name:"Саидова Аминат Шамиловна",url:"https://prodoctorov.ru/mahachkala/vrach/900185-saidova/",qr:"qr/saidova.png"},
+{name:"Сулейманова Ирина Гасниевна",url:"https://prodoctorov.ru/mahachkala/vrach/273383-sulyaymanova/",qr:"qr/suleymanova.png"},
+{name:"Сурхаева Гидаят Камиловна",url:"https://prodoctorov.ru/mahachkala/vrach/1346571-surhaeva/",qr:"qr/surhaeva.png"},
+{name:"Тагирова Айша Гаджиевна",url:"https://prodoctorov.ru/mahachkala/vrach/455421-tagirova/",qr:"qr/tagirova.png"},
+{name:"Тамаева Фатима Арслановна",url:"https://prodoctorov.ru/mahachkala/vrach/455423-tamaeva/",qr:"qr/tamaeva.png"},
+{name:"Терещенко Каринэ Александровна",url:"https://prodoctorov.ru/mahachkala/vrach/539438-tereshenko/",qr:"qr/tereshenko.png"},
+{name:"Убайдуллаева Аида Абдулвагитовна",url:"https://prodoctorov.ru/mahachkala/vrach/1256140-ubaydullaeva/",qr:"qr/ubaydullaeva.png"},
+{name:"Шахсинова Раиса Наримановна",url:"https://prodoctorov.ru/mahachkala/vrach/1085216-shahsinova/",qr:"qr/shahsinova.png"},
+{name:"Шейхмагомедова Заира Адамовна",url:"https://prodoctorov.ru/mahachkala/vrach/455426-shyayhmagomedova/",qr:"qr/shyayhmagomedova.png"}
+
+]
 };
 
-// ------------------ Логика работы ------------------
-let currentPlatform = null;
-let currentDoctor = null;
+// ----------- ЛОГИКА -----------
 
-const reviewEl = document.getElementById('review');
-const selectEl = document.getElementById('select');
-const qrBlock = document.getElementById('qrBlock');
-const qrImg = document.getElementById('qr');
-const nameEl = document.getElementById('name');
-const linkEl = document.getElementById('link');
+let current=null;
+let currentPlatform=null;
 
-function showToast(msg){
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.display='block';
-  t.style.opacity = '1';
-  setTimeout(()=>{
-    t.style.opacity='0';
-    setTimeout(()=>t.style.display='none',300);
-  },2000);
+function generate(){
+  review.value = reviews[Math.floor(Math.random()*reviews.length)];
 }
 
-function generateReview(){
-  reviewEl.value = reviews[Math.floor(Math.random()*reviews.length)];
-  reviewEl.style.height = 'auto';
-  reviewEl.style.height = reviewEl.scrollHeight + 'px';
+function copyReview(){
+  navigator.clipboard.writeText(review.value);
+  toast("Скопировано");
 }
 
-document.getElementById('generateBtn').addEventListener('click', generateReview);
-document.getElementById('copyReviewBtn').addEventListener('click', ()=>{
-  navigator.clipboard.writeText(reviewEl.value);
-  showToast("Скопировано");
-});
+function selectPlatform(p,el){
+  currentPlatform=p;
 
-document.querySelectorAll('.platforms button').forEach(btn=>{
-  ['click','touchstart'].forEach(evt=>{
-    btn.addEventListener(evt, ()=>{
-      currentPlatform = btn.dataset.platform;
-      document.querySelectorAll('.platforms button').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      selectEl.innerHTML = '<option value="">Выберите врача...</option>';
-      if(Array.isArray(data[currentPlatform])){
-        data[currentPlatform].forEach((item,idx)=>{
-          const opt = document.createElement('option');
-          opt.value = idx;
-          opt.textContent = item.name;
-          selectEl.appendChild(opt);
-        });
-      }
-      qrBlock.style.display='none';
-      reviewEl.value='';
-    });
+  document.querySelectorAll('.platforms button')
+  .forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+
+  select.innerHTML='<option value="">Выберите...</option>';
+
+  data[p].forEach((item,i)=>{
+    const o=document.createElement('option');
+    o.value=i;
+    o.textContent=item.name;
+    select.appendChild(o);
   });
-});
 
-selectEl.addEventListener('change', ()=>{
-  const idx = selectEl.value;
-  if(idx==='') return;
-  currentDoctor = data[currentPlatform][idx];
-  nameEl.textContent = currentDoctor.name;
-  linkEl.textContent = currentDoctor.url;
-  qrImg.src = currentDoctor.qr;
+  qrBlock.style.display='none';
+}
+
+select.onchange=()=>{
+  const item=data[currentPlatform][select.value];
+  if(!item) return;
+
+  current=item;
+
+  name.textContent=item.name;
+  qr.src=item.qr;
+  link.textContent=item.url;
+
   qrBlock.style.display='block';
-  generateReview();
-});
+};
 
-document.getElementById('openLinkBtn').addEventListener('click', ()=>{
-  if(currentDoctor) window.open(currentDoctor.url,'_blank');
-});
+function openLink(){
+  window.open(current.url,'_blank');
+}
 
-document.getElementById('copyLinkBtn').addEventListener('click', ()=>{
-  if(currentDoctor){
-    navigator.clipboard.writeText(currentDoctor.url);
-    showToast("Ссылка скопирована");
-  }
-});
+function copyLink(){
+  navigator.clipboard.writeText(current.url);
+  toast("Ссылка скопирована");
+}
 
-});
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.style.display='block';
+  setTimeout(()=>t.style.display='none',2000);
+}
+
 </script>
 </body>
 </html>
