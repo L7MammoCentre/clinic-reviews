@@ -16,7 +16,7 @@
 body{margin:0;font-family:-apple-system,sans-serif;background:var(--bg);}
 .wrap{max-width:500px;margin:20px auto;padding:16px;}
 .card{background:var(--card);backdrop-filter:var(--blur);border-radius:18px;padding:14px;margin-bottom:12px;}
-button{border:none;border-radius:12px;padding:10px;background:var(--accent);color:#fff;}
+button{border:none;border-radius:12px;padding:10px;background:var(--accent);color:#fff;cursor:pointer;}
 button.secondary{background:#e5e5ea;color:#000;}
 .platforms{display:flex;gap:8px;margin-bottom:10px;}
 .platforms button.active{background:#34c759;}
@@ -33,16 +33,16 @@ select{width:100%;padding:12px;border-radius:12px;border:none;margin-top:10px;ma
 <div class="wrap">
 
 <div class="card">
-  <button onclick="generate()">Сгенерировать</button>
-  <button class="secondary" onclick="copyReview()">Скопировать</button>
+  <button id="generateBtn">Сгенерировать</button>
+  <button class="secondary" id="copyReviewBtn">Скопировать</button>
   <textarea id="review"></textarea>
 </div>
 
 <div class="card">
 <div class="platforms">
-  <button onclick="selectPlatform('google', this)">Google</button>
-  <button onclick="selectPlatform('2gis', this)">2GIS</button>
-  <button onclick="selectPlatform('prodoctor', this)">ПроДокторов</button>
+  <button data-platform="google">Google</button>
+  <button data-platform="2gis">2GIS</button>
+  <button data-platform="prodoctor">ПроДокторов</button>
 </div>
 
 <select id="select"></select>
@@ -52,8 +52,8 @@ select{width:100%;padding:12px;border-radius:12px;border:none;margin-top:10px;ma
   <img id="qr" alt="QR">
   <div class="small" id="link"></div>
   <div class="actions">
-    <button onclick="openLink()">Открыть</button>
-    <button class="secondary" onclick="copyLink()">Копировать</button>
+    <button id="openLinkBtn">Открыть</button>
+    <button class="secondary" id="copyLinkBtn">Копировать</button>
   </div>
 </div>
 
@@ -63,6 +63,8 @@ select{width:100%;padding:12px;border-radius:12px;border:none;margin-top:10px;ma
 <div id="toast"></div>
 
 <script>
+window.addEventListener('DOMContentLoaded', () => {
+
 const data = {
 google: [
   {name:"Абубакарова", url:"https://www.google.com/maps/place/Маммологический+центр+%22L7%22,+ул.+Абубакарова,+74,+Махачкала,+Респ.+Дагестан,+367000"},
@@ -77,7 +79,7 @@ prodoctor: [
   {name:"Азаматова Заида Арсланбековна", url:"https://prodoctorov.ru/mahachkala/vrach/955460-azamatova/"},
   {name:"Алиметова Карина Альбертовна", url:"https://prodoctorov.ru/mahachkala/vrach/138973-alimetova/"},
   {name:"Ахмедова Заира Магомедовна", url:"https://prodoctorov.ru/mahachkala/vrach/347307-ahmedova/"},
-  {name:"Бабаева Аминат Магомедовна", url:"https://prodoctorov.ru/mahachкала/vrach/1129493-babaeva/"},
+  {name:"Бабаева Аминат Магомедовна", url:"https://prodoctorov.ru/mahachkала/vrach/1129493-babaeva/"},
   {name:"Гаджиева Мадина Халилбеговна", url:"https://prodoctorov.ru/mahachкала/vrach/536367-gadzhieva/"},
   {name:"Гамзатова Зайнаб Хизриевна", url:"https://prodoctorov.ru/mahachкала/vrach/1271257-gamzatova/"},
   {name:"Гусейнаева Севиля Абакаровна", url:"https://prodoctorov.ru/mahachкала/vrach/1332886-gusyaynaeva/"},
@@ -120,46 +122,70 @@ const reviews = ["Очень внимательный врач, всё объя�
 let current = null;
 let currentPlatform = null;
 
-function generate(){ document.getElementById('review').value = reviews[Math.floor(Math.random()*reviews.length)]; }
-function copyReview(){ navigator.clipboard.writeText(document.getElementById('review').value); toast("Скопировано"); }
+// Элементы
+const reviewEl = document.getElementById('review');
+const selectEl = document.getElementById('select');
+const qrBlock = document.getElementById('qrBlock');
+const qrImg = document.getElementById('qr');
+const nameEl = document.getElementById('name');
+const linkEl = document.getElementById('link');
 
-function selectPlatform(platform, el){
-  currentPlatform = platform;
-  document.querySelectorAll('.platforms button').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-
-  const select = document.getElementById('select');
-  select.innerHTML='';
-  data[platform].forEach(item=>{
-    const o = document.createElement('option');
-    o.value = item.name; // используем ФИО как уникальный идентификатор
-    o.textContent = item.name;
-    select.appendChild(o);
-  });
-
-  document.getElementById('qrBlock').style.display='none';
-}
-
-document.getElementById('select').addEventListener('change', function(){
-  const name = this.value;
-  if(!name) return;
-  current = data[currentPlatform].find(d => d.name===name);
-  if(!current) return;
-  document.getElementById('name').textContent = current.name;
-  document.getElementById('link').textContent = current.url;
-  // QR генерируем через Google Chart API
-  document.getElementById('qr').src = "https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl="+encodeURIComponent(current.url);
-  document.getElementById('qrBlock').style.display='block';
+document.getElementById('generateBtn').addEventListener('click', ()=>{
+  reviewEl.value = reviews[Math.floor(Math.random()*reviews.length)];
 });
 
-function openLink(){ if(current) window.open(current.url,'_blank'); }
-function copyLink(){ if(current){ navigator.clipboard.writeText(current.url); toast("Ссылка скопирована"); } }
+document.getElementById('copyReviewBtn').addEventListener('click', ()=>{
+  navigator.clipboard.writeText(reviewEl.value);
+  toast("Скопировано");
+});
+
+document.querySelectorAll('.platforms button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const platform = btn.dataset.platform;
+    currentPlatform = platform;
+    document.querySelectorAll('.platforms button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    // Заполняем select
+    selectEl.innerHTML = '';
+    data[platform].forEach(item=>{
+      const o = document.createElement('option');
+      o.value = item.name;
+      o.textContent = item.name;
+      selectEl.appendChild(o);
+    });
+    qrBlock.style.display='none';
+  });
+});
+
+selectEl.addEventListener('change', ()=>{
+  const name = selectEl.value;
+  if(!name) return;
+  current = data[currentPlatform].find(d=>d.name===name);
+  if(!current) return;
+  nameEl.textContent = current.name;
+  linkEl.textContent = current.url;
+  qrImg.src = "https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl="+encodeURIComponent(current.url);
+  qrBlock.style.display='block';
+});
+
+document.getElementById('openLinkBtn').addEventListener('click', ()=>{
+  if(current) window.open(current.url,'_blank');
+});
+
+document.getElementById('copyLinkBtn').addEventListener('click', ()=>{
+  if(current){
+    navigator.clipboard.writeText(current.url);
+    toast("Ссылка скопирована");
+  }
+});
 
 function toast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg; t.style.display='block';
   setTimeout(()=>t.style.display='none',2000);
 }
+
+});
 </script>
 </body>
 </html>
