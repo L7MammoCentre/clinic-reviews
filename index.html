@@ -7,14 +7,27 @@
 <style>
 body{margin:0;font-family:-apple-system,sans-serif;background:#f2f2f7;}
 .wrap{max-width:500px;margin:20px auto;padding:16px;}
-.card{background:linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.95));border-radius:18px;padding:16px;margin-bottom:16px;box-shadow:0 8px 20px rgba(0,0,0,0.05);transition:transform 0.3s;}
-.card:hover{transform:translateY(-2px);}
-button{border:none;border-radius:12px;padding:12px;background:#007aff;color:#fff;font-weight:500;cursor:pointer;transition:all 0.2s;}
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.95));
+  border-radius:18px;padding:16px;margin-bottom:16px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.05);
+  transition:transform 0.3s, box-shadow 0.3s;
+}
+.card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 12px 24px rgba(0,0,0,0.08);
+}
+button{
+  border:none;border-radius:12px;padding:12px;background:#007aff;color:#fff;font-weight:500;cursor:pointer;transition:all 0.2s;
+}
 button:hover{transform:scale(1.05);}
 button.secondary{background:#e5e5ea;color:#000;}
 .platforms{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
 .platforms button.active{background:#34c759;color:#fff;}
-textarea,select{width:100%;padding:12px;border-radius:12px;border:none;margin-top:10px;box-shadow:0 2px 5px rgba(0,0,0,0.05);}
+textarea,select{
+  width:100%;padding:12px;border-radius:12px;border:none;margin-top:10px;
+  box-shadow:0 2px 5px rgba(0,0,0,0.05);
+}
 .qr{text-align:center;margin-top:12px;opacity:0;transition:opacity 0.5s ease;}
 .qr.show{opacity:1;}
 .qr img{max-width:160px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1);}
@@ -137,7 +150,11 @@ function selectPlatform(p,el){
   currentPlatform=p;
   document.querySelectorAll('.platforms button').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
-  select.innerHTML='<option value="">Выберите врача...</option>';
+  if(p==='prodoctor'){
+    select.innerHTML='<option value="">Выберите врача...</option>';
+  } else {
+    select.innerHTML='<option value="">Выберите филиал...</option>';
+  }
   data[p].forEach((item,i)=>{ const o=document.createElement('option'); o.value=i; o.textContent=item.name; select.appendChild(o); });
   qrBlock.classList.remove('show');
 }
