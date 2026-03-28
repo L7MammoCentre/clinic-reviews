@@ -56,7 +56,6 @@ select{width:100%;padding:12px;border-radius:12px;border:none;margin-top:10px;ma
     <button class="secondary" id="copyLinkBtn">Копировать</button>
   </div>
 </div>
-
 </div>
 </div>
 
@@ -65,64 +64,15 @@ select{width:100%;padding:12px;border-radius:12px;border:none;margin-top:10px;ma
 <script>
 window.addEventListener('DOMContentLoaded', () => {
 
-const data = {
-google: [
-  {name:"Абубакарова", url:"https://www.google.com/maps/place/Маммологический+центр+%22L7%22,+ул.+Абубакарова,+74,+Махачкала,+Респ.+Дагестан,+367000"},
-  {name:"Батырая", url:"https://www.google.com/maps/place/Маммологический+центр+L7,+ул.+Батырая,+88,+Махачкала,+Респ.+Дагестан,+367008"}
-],
-"2gis": [
-  {name:"Абубакарова", url:"https://2gis.ru/makhachkala/firm/70000001036966726/tab/reviews"},
-  {name:"Батырая", url:"https://2gis.ru/makhachkala/firm/70000001063451186/tab/reviews"}
-],
-prodoctor: [
-  {name:"Абдуллаева Камилла Омаровна", url:"https://prodoctorov.ru/mahachkala/vrach/937672-abdullaeva/"},
-  {name:"Азаматова Заида Арсланбековна", url:"https://prodoctorov.ru/mahachkala/vrach/955460-azamatova/"},
-  {name:"Алиметова Карина Альбертовна", url:"https://prodoctorov.ru/mahachkala/vrach/138973-alimetova/"},
-  {name:"Ахмедова Заира Магомедовна", url:"https://prodoctorov.ru/mahachkala/vrach/347307-ahmedova/"},
-  {name:"Бабаева Аминат Магомедовна", url:"https://prodoctorov.ru/mahachkала/vrach/1129493-babaeva/"},
-  {name:"Гаджиева Мадина Халилбеговна", url:"https://prodoctorov.ru/mahachкала/vrach/536367-gadzhieva/"},
-  {name:"Гамзатова Зайнаб Хизриевна", url:"https://prodoctorov.ru/mahachкала/vrach/1271257-gamzatova/"},
-  {name:"Гусейнаева Севиля Абакаровна", url:"https://prodoctorov.ru/mahachкала/vrach/1332886-gusyaynaeva/"},
-  {name:"Даитгаджиева Аминат Магомедовна", url:"https://prodoctorov.ru/mahachкала/vrach/539425-daitgadzhieva/"},
-  {name:"Далгатова Патимат Омардибировна", url:"https://prodoctorov.ru/mahachкала/vrach/455427-dalgatova/"},
-  {name:"Далгатова Солтанат Ибрагимовна", url:"https://prodoctorov.ru/mahachкала/vrach/908802-dalgatova/"},
-  {name:"Джалилова Заира Абдурахмановна", url:"https://prodoctorov.ru/mahachкала/vrach/631983-dzhalilova/"},
-  {name:"Джамиля Асадулаевна Магомедова", url:"https://prodoctorov.ru/mahachкала/vrach/539435-magomedova/"},
-  {name:"Диана Рамазановна Магомедова", url:"https://prodoctorov.ru/mahachкала/vrach/981164-magomedova/"},
-  {name:"Закаржаева Заира Магадовна", url:"https://prodoctorov.ru/mahachкала/vrach/900124-zakarzhaeva/"},
-  {name:"Ильдарова Милана Гусейновна", url:"https://prodoctorov.ru/mahachкала/vrach/1328769-ildarova/"},
-  {name:"Исмаилова Фируза Фаталиевна", url:"https://prodoctorov.ru/mahachкала/vrach/1319798-ismailova/"},
-  {name:"Магомедова Изольда Абдулаевна", url:"https://prodoctorov.ru/mahachкала/vrach/383962-magomedova/"},
-  {name:"Магомедова Фариза Магомедовна", url:"https://prodoctorov.ru/mahachкала/vrach/776993-magomedova/"},
-  {name:"Магомедов Омардибир", url:"https://prodoctorov.ru/mahachкала/vrach/131808-magomedov/"},
-  {name:"Мадина Абдулхалимовна Магомедова", url:"https://prodoctorov.ru/mahachкала/vrach/497767-magomedova/"},
-  {name:"Мехтиханова Дженнет Мурадовна", url:"https://prodoctorov.ru/mahachкала/vrach/383964-mehtihanova/"},
-  {name:"Мурачуев Мирза Ажубович", url:"https://prodoctorov.ru/mahachкала/vrach/458593-murachuev/"},
-  {name:"Муслимова Батибат Магомедариповна", url:"https://prodoctorov.ru/mahachкала/vrach/906858-muslimova/"},
-  {name:"Нураева Тамара Шамильевна", url:"https://prodoctorov.ru/mahachкала/vrach/455422-nuraeva/"},
-  {name:"Нуриева Анастасия Мирединовна", url:"https://prodoctorov.ru/mahachкала/vrach/465239-nurieva/"},
-  {name:"Омарова Диана Гаджимурадовна", url:"https://prodoctorov.ru/mahachкала/vrach/455425-omarova/"},
-  {name:"Омарова Наиля Омаровна", url:"https://prodoctorov.ru/mahachкала/vrach/606299-omarova/"},
-  {name:"Омарова Оксана Магомедовна", url:"https://prodoctorov.ru/mahachкала/vrach/539403-omarova/"},
-  {name:"Рамазанова Заира Джамутдиновна", url:"https://prodoctorov.ru/mahachкала/vrach/555316-ramazanova/"},
-  {name:"Саидова Аминат Шамиловна", url:"https://prodoctorov.ru/mahachкала/vrach/900185-saidova/"},
-  {name:"Сулейманова Ирина Гасниевна", url:"https://prodoctorov.ru/mahachкала/vrach/273383-sulyaymanova/"},
-  {name:"Сурхаева Гидаят Камиловна", url:"https://prodoctorov.ru/mahachкала/vrach/1346571-surhaeva/"},
-  {name:"Тагирова Айша Гаджиевна", url:"https://prodoctorov.ru/mahachкала/vrach/455421-tagirova/"},
-  {name:"Тамаева Фатима Арслановна", url:"https://prodoctorov.ru/mahachкала/vrach/455423-tamaeva/"},
-  {name:"Терещенко Каринэ Александровна", url:"https://prodoctorov.ru/mahachкала/vrach/539438-tereshenko/"},
-  {name:"Убайдуллаева Аида Абдулвагитовна", url:"https://prodoctorov.ru/mahachкала/vrach/1256140-ubaydullaeva/"},
-  {name:"Шахсинова Раиса Наримановна", url:"https://prodoctorov.ru/mahachкала/vrach/1085216-shahsinova/"},
-  {name:"Шейхмагомедова Заира Адамовна", url:"https://prodoctorov.ru/mahachкала/vrach/455426-shyayhmagomedova/"}
-]
-};
+const reviews = [
+  "Очень внимательный врач, всё объяснил.",
+  "Спасибо за профессионализм.",
+  "Прием прошел комфортно."
+];
 
-const reviews = ["Очень внимательный врач, всё объяснил.","Спасибо за профессионализм.","Прием прошел комфортно."];
-
-let current = null;
 let currentPlatform = null;
+let currentDoctor = null;
 
-// Элементы
 const reviewEl = document.getElementById('review');
 const selectEl = document.getElementById('select');
 const qrBlock = document.getElementById('qrBlock');
@@ -130,58 +80,111 @@ const qrImg = document.getElementById('qr');
 const nameEl = document.getElementById('name');
 const linkEl = document.getElementById('link');
 
+// ==================== ДАННЫЕ ВРАЧЕЙ ====================
+const data = {
+  google: [
+    {name:"Абубакарова", url:"https://www.google.com/maps/place/Маммологический+центр+%22L7%22,+ул.+Абубакарова,+74,+Махачкала,+Респ.+Дагестан,+367000"},
+    {name:"Батырая", url:"https://www.google.com/maps/place/Маммологический+центр+L7,+ул.+Батырая,+88,+Махачкала,+Респ.+Дагестан,+367008"}
+  ],
+  "2gis": [
+    {name:"Абубакарова", url:"https://2gis.ru/makhachkala/firm/70000001036966726/tab/reviews"},
+    {name:"Батырая", url:"https://2gis.ru/makhachkala/firm/70000001063451186/tab/reviews"}
+  ],
+  prodoctor: [
+    {name:"Абдуллаева Камилла Омаровна", url:"https://prodoctorov.ru/mahachkala/vrach/937672-abdullaeva/"},
+    {name:"Азаматова Заида Арсланбековна", url:"https://prodoctorov.ru/mahachкала/vrach/955460-azamatova/"},
+    {name:"Алиметова Карина Альбертовна", url:"https://prodoctorov.ru/mahachкала/vrach/138973-alimetova/"},
+    {name:"Ахмедова Заира Магомедовна", url:"https://prodoctorov.ru/mahachкала/vrach/347307-ahmedova/"},
+    {name:"Бабаева Аминат Магомедовна", url:"https://prodoctorov.ru/mahachкала/vrach/1129493-babaeva/"},
+    {name:"Гаджиева Мадина Халилбеговна", url:"https://prodoctorov.ru/mahachкала/vrach/536367-gadzhieva/"},
+    {name:"Гамзатова Зайнаб Хизриевна", url:"https://prodoctorov.ru/mahachкала/vrach/1271257-gamzatova/"},
+    {name:"Гусейнаева Севиля Абакаровна", url:"https://prodoctorov.ru/mahachкала/vrach/1332886-gusyaynaeva/"},
+    {name:"Даитгаджиева Аминат Магомедовна", url:"https://prodoctorov.ru/mahachкала/vrach/539425-daitgadzhieva/"},
+    {name:"Далгатова Патимат Омардибировна", url:"https://prodoctorov.ru/mahachкала/vrach/455427-dalgatova/"},
+    {name:"Далгатова Солтанат Ибрагимовна", url:"https://prodoctorov.ru/mahachкала/vrach/908802-dalgatova/"},
+    {name:"Джалилова Заира Абдурахмановна", url:"https://prodoctorov.ru/mahachкала/vrach/631983-dzhalilova/"},
+    {name:"Джамиля Асадулаевна Магомедова", url:"https://prodoctorov.ru/mahachкала/vrach/539435-magomedova/"},
+    {name:"Диана Рамазановна Магомедова", url:"https://prodoctorov.ru/mahachкала/vrach/981164-magomedova/"},
+    {name:"Закаржаева Заира Магадовна", url:"https://prodoctorov.ru/mahachкала/vrach/900124-zakarzhaeva/"},
+    {name:"Ильдарова Милана Гусейновна", url:"https://prodoctorov.ru/mahachкала/vrach/1328769-ildarova/"},
+    {name:"Исмаилова Фируза Фаталиевна", url:"https://prodoctorov.ru/mahachкала/vrach/1319798-ismailova/"},
+    {name:"Магомедова Изольда Абдулаевна", url:"https://prodoctorov.ru/mahachкала/vrach/383962-magomedova/"},
+    {name:"Магомедова Фариза Магомедовна", url:"https://prodoctorov.ru/mahachкала/vrach/776993-magomedova/"},
+    {name:"Магомедов Омардибир", url:"https://prodoctorov.ru/mahachкала/vrach/131808-magomedov/"},
+    {name:"Мадина Абдулхалимовна Магомедова", url:"https://prodoctorov.ru/mahachкала/vrach/497767-magomedova/"},
+    {name:"Мехтиханова Дженнет Мурадовна", url:"https://prodoctorov.ru/mahachкала/vrach/383964-mehtihanova/"},
+    {name:"Мурачуев Мирза Ажубович", url:"https://prodoctorov.ru/mahachкала/vrach/458593-murachuev/"},
+    {name:"Муслимова Батибат Магомедариповна", url:"https://prodoctorov.ru/mahachкала/vrach/906858-muslimova/"},
+    {name:"Нураева Тамара Шамильевна", url:"https://prodoctorov.ru/mahachкала/vrach/455422-nuraeva/"},
+    {name:"Нуриева Анастасия Мирединовна", url:"https://prodoctorov.ru/mahachкала/vrach/465239-nurieva/"},
+    {name:"Омарова Диана Гаджимурадовна", url:"https://prodoctorov.ru/mahachкала/vrach/455425-omarova/"},
+    {name:"Омарова Наиля Омаровна", url:"https://prodoctorov.ru/mahachкала/vrach/606299-omarova/"},
+    {name:"Омарова Оксана Магомедовна", url:"https://prodoctorov.ru/mahachкала/vrach/539403-omarova/"},
+    {name:"Рамазанова Заира Джамутдиновна", url:"https://prodoctorov.ru/mahachкала/vrach/555316-ramazanova/"},
+    {name:"Саидова Аминат Шамиловна", url:"https://prodoctorov.ru/mahachкала/vrach/900185-saidova/"},
+    {name:"Сулейманова Ирина Гасниевна", url:"https://prodoctorov.ru/mahachкала/vrach/273383-sulyaymanova/"},
+    {name:"Сурхаева Гидаят Камиловна", url:"https://prodoctorov.ru/mahachкала/vrach/1346571-surhaeva/"},
+    {name:"Тагирова Айша Гаджиевна", url:"https://prodoctorov.ru/mahachкала/vrach/455421-tagirova/"},
+    {name:"Тамаева Фатима Арслановна", url:"https://prodoctorov.ru/mahachкала/vrach/455423-tamaeva/"},
+    {name:"Терещенко Каринэ Александровна", url:"https://prodoctorov.ru/mahachкала/vrach/539438-tereshenko/"},
+    {name:"Убайдуллаева Аида Абдулвагитовна", url:"https://prodoctorov.ru/mahachкала/vrach/1256140-ubaydullaeva/"},
+    {name:"Шахсинова Раиса Наримановна", url:"https://prodoctorov.ru/mahachкала/vrach/1085216-shahsinova/"},
+    {name:"Шейхмагомедова Заира Адамовна", url:"https://prodoctorov.ru/mahachкала/vrach/455426-shyayhmagomedova/"}
+  ]
+};
+// =========================================================
+
 document.getElementById('generateBtn').addEventListener('click', ()=>{
   reviewEl.value = reviews[Math.floor(Math.random()*reviews.length)];
 });
 
 document.getElementById('copyReviewBtn').addEventListener('click', ()=>{
   navigator.clipboard.writeText(reviewEl.value);
-  toast("Скопировано");
+  showToast("Скопировано");
 });
 
 document.querySelectorAll('.platforms button').forEach(btn=>{
   btn.addEventListener('click', ()=>{
-    const platform = btn.dataset.platform;
-    currentPlatform = platform;
+    currentPlatform = btn.dataset.platform;
     document.querySelectorAll('.platforms button').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
-    // Заполняем select
+
     selectEl.innerHTML = '';
-    data[platform].forEach(item=>{
-      const o = document.createElement('option');
-      o.value = item.name;
-      o.textContent = item.name;
-      selectEl.appendChild(o);
+    data[currentPlatform].forEach((item, idx)=>{
+      const opt = document.createElement('option');
+      opt.value = idx;
+      opt.textContent = item.name;
+      selectEl.appendChild(opt);
     });
-    qrBlock.style.display='none';
+    qrBlock.style.display = 'none';
   });
 });
 
 selectEl.addEventListener('change', ()=>{
-  const name = selectEl.value;
-  if(!name) return;
-  current = data[currentPlatform].find(d=>d.name===name);
-  if(!current) return;
-  nameEl.textContent = current.name;
-  linkEl.textContent = current.url;
-  qrImg.src = "https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl="+encodeURIComponent(current.url);
-  qrBlock.style.display='block';
+  const idx = selectEl.value;
+  if(idx === '') return;
+  currentDoctor = data[currentPlatform][idx];
+  nameEl.textContent = currentDoctor.name;
+  linkEl.textContent = currentDoctor.url;
+  qrImg.src = "https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl="+encodeURIComponent(currentDoctor.url);
+  qrBlock.style.display = 'block';
 });
 
 document.getElementById('openLinkBtn').addEventListener('click', ()=>{
-  if(current) window.open(current.url,'_blank');
+  if(currentDoctor) window.open(currentDoctor.url,'_blank');
 });
 
 document.getElementById('copyLinkBtn').addEventListener('click', ()=>{
-  if(current){
-    navigator.clipboard.writeText(current.url);
-    toast("Ссылка скопирована");
+  if(currentDoctor){
+    navigator.clipboard.writeText(currentDoctor.url);
+    showToast("Ссылка скопирована");
   }
 });
 
-function toast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.style.display='block';
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display='block';
   setTimeout(()=>t.style.display='none',2000);
 }
 
